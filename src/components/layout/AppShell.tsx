@@ -1,0 +1,3 @@
+"use client";
+import {useState,type ReactNode} from "react";import {Sidebar} from "./Sidebar";import {Header} from "./Header";
+export function AppShell({children}:{children:ReactNode}){const [open,setOpen]=useState(false);return <div className="min-h-screen bg-[#050814]"><div className={"fixed inset-0 z-30 bg-black/70 lg:hidden "+(open?"":"pointer-events-none opacity-0")} onClick={()=>setOpen(false)}><div className={"h-full w-72 bg-[#060b16] p-3 transition-transform "+(open?"translate-x-0":"-translate-x-full")}><Sidebar/></div></div><div className="flex min-h-screen"><Sidebar/><div className="min-w-0 flex-1"><Header onMenu={()=>setOpen(true)}/><main className="space-bg min-h-[calc(100vh-4rem)] p-4 md:p-6 lg:p-8">{children}</main></div></div></div>}
