@@ -242,7 +242,7 @@ export default function MediaGuard() {
               onSelect={selectImage}
               onClear={clearCurrentFile}
             />
-          ) : kind === "video" ? (
+          ) : (
             <VideoUploader
               file={videoFile}
               inputRef={videoRef}
