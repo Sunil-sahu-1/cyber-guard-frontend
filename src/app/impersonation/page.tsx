@@ -229,14 +229,6 @@ export default function MediaGuard() {
             formats="MP4, MOV, AVI, MKV, WEBM"
           />
 
-          <ModeButton
-            active={kind === "voice"}
-            onClick={() => switchMode("voice")}
-            icon={<Mic className="h-5 w-5 text-emerald-300" />}
-            title="Voice Verification"
-            description="Synthetic voice and anti-spoofing"
-            formats="WAV, MP3, M4A, FLAC, OGG, AAC"
-          />
         </div>
       </Panel>
 
@@ -271,11 +263,7 @@ export default function MediaGuard() {
             loading={loading}
           >
             <ScanFace className="h-4 w-4" />
-            {kind === "image"
-              ? "Analyze photo"
-              : kind === "video"
-                ? "Analyze video"
-                : "Verify voice"}
+            {kind === "image" ? "Analyze photo" : "Analyze video"}
           </Button>
         </Panel>
 
@@ -286,8 +274,9 @@ export default function MediaGuard() {
             <div className="text-center">
               {kind === "image" ? (
                 <ImageIcon className="mx-auto h-12 w-12 text-cyan-300/50" />
-              ) : kind === "video" ? (
+              ) : (
                 <FileVideo className="mx-auto h-12 w-12 text-violet-300/50" />
+              )}
 
               <h2 className="mt-4 font-semibold">
                 {kind === "image"
@@ -299,11 +288,7 @@ export default function MediaGuard() {
 
               <p className="mt-1 text-sm text-slate-600">
                 Upload a{" "}
-                {kind === "image"
-                  ? "photo"
-                  : kind === "video"
-                    ? "video"
-                    : "voice recording"}{" "}
+                {kind === "image" ? "photo" : "video"}{" "}
                 to see the analysis results.
               </p>
             </div>
