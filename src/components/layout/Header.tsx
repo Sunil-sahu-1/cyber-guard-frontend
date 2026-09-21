@@ -1,0 +1,28 @@
+"use client";
+import { Bell, Menu } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+export function Header({ onMenu }: { onMenu?: () => void }) {
+  const { user } = useAuth();
+  return (
+    <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-white/10 bg-[#050814]/75 px-4 backdrop-blur-xl lg:px-7">
+      <button onClick={onMenu} className="rounded-lg p-2 text-slate-400 hover:bg-white/5 lg:hidden">
+        <Menu className="h-5 w-5" />
+      </button>
+      <div className="hidden text-xs uppercase tracking-[.2em] text-slate-500 sm:block">
+        Defend • Detect • Respond
+      </div>
+      <div className="flex items-center gap-4">
+        <Bell className="h-5 w-5 text-slate-400" />
+        <div className="text-right">
+          <div className="text-sm font-medium text-white">
+            {user ? user.first_name + " " + user.last_name : "Operator"}
+          </div>
+          <div className="text-xs text-slate-500">{user?.role ?? "security user"}</div>
+        </div>
+        <div className="grid h-9 w-9 place-items-center rounded-full bg-violet-400/10 text-sm font-semibold ring-1 ring-white/10">
+          {user?.first_name?.[0] ?? "C"}
+        </div>
+      </div>
+    </header>
+  );
+}

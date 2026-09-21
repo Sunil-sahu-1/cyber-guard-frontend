@@ -1,0 +1,104 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { ArrowLeft, Database, BrainCircuit } from "lucide-react";
+import Link from "next/link";
+import { AppShell } from "@/components/layout/AppShell";
+import { EmptyState, Panel, PageTitle, RiskBadge } from "@/components/ui";
+import { getThreat } from "@/services/api/threatApi";
+import type { Threat } from "@/types/api";
+export default function ThreatDetail() {
+  const { id } = useParams<{ id: string }>();
+  const [item, setItem] = useState<Threat | null>(null);
+  useEffect(() => {
+    getThreat(Number(id))
+      .then(setItem)
+      .catch(() => {});
+  }, [id]);
+  if (!item)
+    return (
+      <AppShell>
+        <PageTitle title="Threat detail" description="Loading analysis record…" />
+      </AppShell>
+    );
+  return (
+    <AppShell>
+      <PageTitle
+        title={item.threat_type.replaceAll("_", " ")}
+        description={"Threat #" + item.id + " • " + item.source_type}
+        action={
+          <Link href="/threats" className="text-sm text-slate-400 hover:text-white">
+            <ArrowLeft className="mr-1 inline h-4 w-4" />
+            Back
+          </Link>
+        }
+      />
+      <div className="grid gap-5 xl:grid-cols-[1.1fr_.9fr]">
+        <Panel className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm text-slate-500">Risk score</div>
+              <div className="mt-1 text-5xl font-semibold">
+                {item.risk_score}
+                <span className="text-xl text-slate-600">/100</span>
+              </div>
+            </div>
+            <RiskBadge value={item.severity} />
+          </div>
+          <div className="mt-7 h-3 overflow-hidden rounded-full bg-white/5">
+            <div
+              className="h-full rounded-full bg-cyan-300"
+              style={{ width: Math.min(100, item.risk_score) + "%" }}
+            />
+          </div>
+          <div className="mt-7 rounded-xl border border-white/10 bg-black/15 p-4">
+            <div className="mb-2 text-sm font-medium text-slate-300">Explanation</div>
+            <p className="text-sm leading-6 text-slate-400">
+              {item.explanation || "No explanation provided."}
+            </p>
+          </div>
+        </Panel>
+        <Panel className="p-6">
+          <h2 className="flex items-center gap-2 font-semibold">
+            <Database className="h-4 w-4 text-cyan-300" />
+            Evidence
+          </h2>
+          <div className="mt-4 space-y-3">
+            {item.evidence?.length ? (
+              item.evidence.map((e) => (
+                <div key={e.id} className="rounded-xl border border-white/10 bg-white/[.025] p-3">
+                  <div className="text-xs text-cyan-300">{e.evidence_type}</div>
+                  <div className="mt-1 text-sm text-slate-300">{e.evidence_value}</div>
+                </div>
+              ))
+            ) : (
+              <EmptyState text="No evidence attached." />
+            )}
+          </div>
+        </Panel>
+      </div>
+      <Panel className="mt-5 p-6">
+        <h2 className="flex items-center gap-2 font-semibold">
+          <BrainCircuit className="h-4 w-4 text-violet-300" />
+          AI model analyses
+        </h2>
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          {item.analyses?.length ? (
+            item.analyses.map((a) => (
+              <div key={a.id} className="rounded-xl border border-white/10 bg-white/[.025] p-4">
+                <div className="flex justify-between">
+                  <span className="font-medium text-slate-200">{a.model_name}</span>
+                  <span className="text-xs text-slate-500">{a.confidence}% confidence</span>
+                </div>
+                <div className="mt-3 text-sm text-slate-400">Prediction: {a.prediction}</div>
+                <div className="mt-1 text-sm text-slate-500">Score: {a.score}</div>
+              </div>
+            ))
+          ) : (
+            <EmptyState text="No model analysis records." />
+          )}
+        </div>
+      </Panel>
+    </AppShell>
+  );
+}

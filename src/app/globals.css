@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: #050814;
+  color: #e8f1ff;
+}
+body {
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+.space-bg {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(66, 153, 225, 0.16), transparent 28%),
+    radial-gradient(circle at 80% 0%, rgba(139, 92, 246, 0.12), transparent 30%),
+    linear-gradient(180deg, #050814 0%, #08111f 55%, #050814 100%);
+  position: relative;
+  overflow: hidden;
+}
+.space-bg:before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(#a9c7ff 1px, transparent 1px);
+  background-size: 38px 38px;
+  opacity: 0.08;
+}
+.glass {
+  background: rgba(11, 21, 38, 0.72);
+  border: 1px solid rgba(139, 181, 255, 0.13);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(18px);
+}
+.glow {
+  box-shadow:
+    0 0 0 1px rgba(85, 184, 255, 0.12),
+    0 0 42px rgba(46, 163, 255, 0.12);
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #23334f;
+  border-radius: 999px;
+}

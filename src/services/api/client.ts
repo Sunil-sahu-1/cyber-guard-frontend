@@ -1,0 +1,97 @@
+const BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000/api").replace(
+  /\/$/,
+  "",
+);
+export function getAccessToken() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("cg_access");
+}
+export function getRefreshToken() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("cg_refresh");
+}
+export function saveTokens(access: string, refresh: string) {
+  localStorage.setItem("cg_access", access);
+  localStorage.setItem("cg_refresh", refresh);
+}
+export function clearTokens() {
+  localStorage.removeItem("cg_access");
+  localStorage.removeItem("cg_refresh");
+  localStorage.removeItem("cg_user");
+}
+export function saveUser(user: unknown) {
+  localStorage.setItem("cg_user", JSON.stringify(user));
+}
+export function getSavedUser<T = unknown>() {
+  if (typeof window === "undefined") return null;
+  const raw = localStorage.getItem("cg_user");
+  try {
+    return raw ? (JSON.parse(raw) as T) : null;
+  } catch {
+    return null;
+  }
+}
+let refreshing: Promise<string | null> | null = null;
+async function refresh() {
+  const r = getRefreshToken();
+  if (!r) return null;
+  if (!refreshing)
+    refreshing = (async () => {
+      try {
+        const res = await fetch(BASE_URL + "/auth/token/refresh/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh: r }),
+        });
+        if (!res.ok) {
+          clearTokens();
+          return null;
+        }
+        const d = await res.json();
+        saveTokens(d.access, d.refresh ?? r);
+        return d.access;
+      } catch {
+        clearTokens();
+        return null;
+      } finally {
+        refreshing = null;
+      }
+    })();
+  return refreshing;
+}
+export async function apiFetch<T>(path: string, init: RequestInit = {}, retry = true) {
+  const token = getAccessToken();
+  const headers = new Headers(init.headers);
+  if (!(init.body instanceof FormData)) headers.set("Content-Type", "application/json");
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  const res = await fetch(`${BASE_URL}${path}`, { ...init, headers, cache: "no-store" });
+  if (res.status === 401 && retry && getRefreshToken()) {
+    const next = await refresh();
+    if (next) return apiFetch<T>(path, init, false);
+  }
+  const text = await res.text();
+  let data: unknown = {};
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    data = { detail: text };
+  }
+  if (!res.ok) {
+    let message =
+      typeof data === "object" && data && "detail" in data
+        ? String((data as { detail: unknown }).detail)
+        : typeof data === "object" && data && "message" in data
+          ? String((data as { message: unknown }).message)
+          : "Request failed";
+    if (typeof data === "object" && data && "remaining_attempts" in data) {
+      message += ` Remaining login attempts: ${String((data as { remaining_attempts: unknown }).remaining_attempts)}.`;
+    }
+    if (typeof data === "object" && data && "password" in data) {
+      const passwordError = (data as { password: unknown }).password;
+      message +=
+        " " + (Array.isArray(passwordError) ? passwordError.join(" ") : String(passwordError));
+    }
+    throw new Error(message);
+  }
+  return data as T;
+}

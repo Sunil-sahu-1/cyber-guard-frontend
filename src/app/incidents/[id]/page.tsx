@@ -1,0 +1,151 @@
+"use client";
+import { useEffect, useState } from "react";
+import { ArrowLeft, Play, Plus } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { AppShell } from "@/components/layout/AppShell";
+import { Button, EmptyState, Input, Panel, PageTitle, RiskBadge } from "@/components/ui";
+import {
+  addResponseAction,
+  executeResponseAction,
+  getIncident,
+  resolveIncident,
+} from "@/services/api/incidentApi";
+import type { Incident } from "@/types/api";
+export default function IncidentDetail() {
+  const { id } = useParams<{ id: string }>();
+  const [item, setItem] = useState<Incident | null>(null),
+    [action, setAction] = useState("MONITOR"),
+    [desc, setDesc] = useState(""),
+    [busy, setBusy] = useState(false);
+  async function load() {
+    try {
+      setItem(await getIncident(Number(id)));
+    } catch {}
+  }
+  useEffect(() => {
+    load();
+  }, [id]);
+  async function add() {
+    setBusy(true);
+    try {
+      await addResponseAction(Number(id), { action_type: action, description: desc });
+      setDesc("");
+      await load();
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function execute(actionId: number) {
+    await executeResponseAction(actionId);
+    load();
+  }
+  async function resolve() {
+    await resolveIncident(Number(id));
+    load();
+  }
+  if (!item)
+    return (
+      <AppShell>
+        <PageTitle title="Incident detail" description="Loading…" />
+      </AppShell>
+    );
+  return (
+    <AppShell>
+      <PageTitle
+        title={item.title}
+        description={"Incident #" + item.id + " • " + item.source_type}
+        action={
+          <Link href="/incidents" className="text-sm text-slate-400">
+            <ArrowLeft className="mr-1 inline h-4 w-4" />
+            Back
+          </Link>
+        }
+      />
+      <div className="grid gap-5 xl:grid-cols-[1.15fr_.85fr]">
+        <Panel className="p-6">
+          <div className="flex justify-between">
+            <div>
+              <div className="text-xs text-slate-600">Risk</div>
+              <div className="mt-1 text-4xl font-semibold">{item.risk_score}/100</div>
+            </div>
+            <RiskBadge value={item.severity} />
+          </div>
+          <p className="mt-6 text-sm leading-6 text-slate-400">{item.description}</p>
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            <div className="rounded-xl border border-white/10 p-3">
+              <div className="text-xs text-slate-600">Status</div>
+              <div className="mt-1 text-sm text-slate-300">{item.status}</div>
+            </div>
+            <div className="rounded-xl border border-white/10 p-3">
+              <div className="text-xs text-slate-600">Source</div>
+              <div className="mt-1 text-sm text-slate-300">
+                {item.source_type} #{item.source_id ?? "—"}
+              </div>
+            </div>
+          </div>
+          {!["RESOLVED", "CLOSED"].includes(item.status) && (
+            <Button className="mt-5" onClick={resolve}>
+              <CheckCircle2 className="h-4 w-4" />
+              Resolve incident
+            </Button>
+          )}
+        </Panel>
+        <Panel className="p-6">
+          <h2 className="font-semibold">Add response action</h2>
+          <select
+            value={action}
+            onChange={(e) => setAction(e.target.value)}
+            className="mt-4 w-full rounded-xl border border-white/10 bg-[#091222] px-3.5 py-3 text-sm text-white"
+          >
+            <option>MONITOR</option>
+            <option>ESCALATE</option>
+            <option>REVOKE_SESSION</option>
+            <option>STRENGTHEN_AUTH</option>
+            <option>ALERT_USER</option>
+            <option>ALERT_ADMIN</option>
+            <option>BLOCK_URL</option>
+            <option>QUARANTINE_EMAIL</option>
+            <option>ISOLATE_DEVICE</option>
+          </select>
+          <Input
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+            placeholder="Action description"
+            className="mt-3"
+          />
+          <Button className="mt-3" onClick={add} loading={busy}>
+            <Plus className="h-4 w-4" />
+            Add action
+          </Button>
+        </Panel>
+      </div>
+      <Panel className="mt-5 p-6">
+        <h2 className="font-semibold">Response actions</h2>
+        <div className="mt-4 space-y-3">
+          {item.response_actions?.length ? (
+            item.response_actions.map((a: any) => (
+              <div
+                key={a.id}
+                className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 p-4"
+              >
+                <div>
+                  <div className="text-sm font-medium text-slate-200">{a.action_type}</div>
+                  <div className="mt-1 text-sm text-slate-500">{a.description}</div>
+                </div>
+                {!a.executed_at && (
+                  <Button variant="ghost" onClick={() => execute(a.id)}>
+                    <Play className="h-4 w-4" />
+                    Execute
+                  </Button>
+                )}
+              </div>
+            ))
+          ) : (
+            <EmptyState text="No response actions recorded." />
+          )}
+        </div>
+      </Panel>
+    </AppShell>
+  );
+}
