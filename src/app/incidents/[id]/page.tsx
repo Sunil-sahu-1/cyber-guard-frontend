@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Play, Plus } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Play, Plus } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
