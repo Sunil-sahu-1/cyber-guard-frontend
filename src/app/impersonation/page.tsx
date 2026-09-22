@@ -592,6 +592,7 @@ function Result({
   const face = (result.face_detection ?? {}) as Record<string, unknown>;
   const visual = (result.visual_artifacts ?? {}) as Record<string, unknown>;
   const metadata = (result.metadata ?? {}) as Record<string, unknown>;
+  const webPresence = (result.web_presence ?? {}) as Record<string, unknown>;
 
   const sections = {
     face: face,
@@ -713,6 +714,8 @@ function Result({
         })}
       </div>
 
+      {kind === "image" ? <PublicWebPresence data={webPresence} /> : null}
+
       {result.indicators?.length ? (
         <Indicators items={result.indicators} />
       ) : null}
@@ -720,6 +723,85 @@ function Result({
   );
 }
 
+
+
+function PublicWebPresence({ data }: { data: Record<string, unknown> }) {
+  const status = String(data.status ?? "NOT_AVAILABLE");
+  const provider = String(data.provider ?? "Public web index");
+  const matches = Array.isArray(data.matches) ? data.matches : [];
+  const fingerprint = (data.fingerprint ?? {}) as Record<string, unknown>;
+
+  return (
+    <div className="mt-5 rounded-xl border border-cyan-300/10 bg-cyan-300/[.03] p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-sm font-medium">Public Web Presence</div>
+          <p className="mt-1 text-xs leading-5 text-slate-500">
+            Cyber Guard fingerprint + indexed public-web image evidence.
+          </p>
+        </div>
+        <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-wider text-cyan-300">
+          {humanize(status)}
+        </span>
+      </div>
+
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        <div className="rounded-lg border border-white/5 bg-black/10 p-3">
+          <div className="text-[10px] uppercase tracking-wider text-slate-600">SHA-256</div>
+          <div className="mt-1 break-all text-xs text-slate-300">{String(fingerprint.sha256 ?? "Not available")}</div>
+        </div>
+        <div className="rounded-lg border border-white/5 bg-black/10 p-3">
+          <div className="text-[10px] uppercase tracking-wider text-slate-600">Perceptual hash</div>
+          <div className="mt-1 break-all text-xs text-slate-300">{String(fingerprint.average_hash ?? "Not available")}</div>
+        </div>
+      </div>
+
+      {status === "NOT_CONFIGURED" ? (
+        <div className="mt-3 rounded-lg border border-amber-300/10 bg-amber-300/[.04] p-3 text-xs leading-5 text-slate-500">
+          {String(data.message ?? `Configure the public-web search provider to discover indexed pages.`)}
+        </div>
+      ) : null}
+
+      {matches.length > 0 ? (
+        <div className="mt-4">
+          <div className="mb-2 text-xs uppercase tracking-wider text-slate-600">
+            Public pages / images found: {matches.length}
+          </div>
+          <div className="grid gap-2">
+            {matches.map((item, index) => {
+              const match = (item ?? {}) as Record<string, unknown>;
+              const pageUrl = String(match.page_url ?? "");
+              const imageUrl = String(match.image_url ?? "");
+              return (
+                <div key={`${pageUrl}-${imageUrl}-${index}`} className="rounded-lg border border-white/5 bg-black/10 p-3">
+                  <div className="text-xs font-medium text-slate-300">
+                    {String(match.title ?? `Web match ${index + 1}`)}
+                  </div>
+                  <div className="mt-2 grid gap-1 text-[11px]">
+                    {pageUrl ? (
+                      <a href={pageUrl} target="_blank" rel="noreferrer" className="break-all text-cyan-300 hover:text-cyan-200">
+                        Public page: {pageUrl}
+                      </a>
+                    ) : null}
+                    {imageUrl ? (
+                      <a href={imageUrl} target="_blank" rel="noreferrer" className="break-all text-slate-400 hover:text-white">
+                        Image URL: {imageUrl}
+                      </a>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+
+      <div className="mt-3 text-[11px] leading-5 text-slate-600">
+        Provider: {provider}. {String(data.coverage_note ?? "")}
+      </div>
+    </div>
+  );
+}
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
