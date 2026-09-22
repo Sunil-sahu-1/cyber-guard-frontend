@@ -289,6 +289,19 @@ function Result({ result }: { result: ScanResponse }) {
         />
       </div>
 
+      {result && (
+        <Info title="OCR / extracted email text">
+          <div className="rounded-xl bg-black/20 p-3">
+            <div className="mb-2 text-xs uppercase tracking-[.12em] text-slate-600">
+              Screenshot OCR text
+            </div>
+            <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-xs leading-5 text-slate-400">
+              {String((result as ScanResponse & { ocr?: { raw_text?: string } }).ocr?.raw_text ?? "OCR text is shown after screenshot upload.")}
+            </pre>
+          </div>
+        </Info>
+      )}
+
       <Info title="Explanation">
         <p className="text-sm leading-6 text-slate-400">
           {result.explanation}
