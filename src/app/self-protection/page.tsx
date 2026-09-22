@@ -241,6 +241,21 @@ function IPOverview({ result }: { result: SelfProtectionIPLookup }) {
       </div>
 
       <Panel className="p-5">
+        <div className="flex items-center gap-2">
+          <Globe2 className="h-4 w-4 text-cyan-300" />
+          <h2 className="font-semibold">Network identity snapshot</h2>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <Stat label="Flag" value={result.flag?.emoji} />
+          <Stat label="ASN" value={result.connection?.asn} />
+          <Stat label="ISP" value={result.connection?.isp} />
+          <Stat label="Organization" value={result.connection?.organization} />
+          <Stat label="Network domain" value={result.connection?.domain} />
+          <Stat label="Reverse DNS" value={result.public_exposure?.reverse_dns} />
+        </div>
+      </Panel>
+
+      <Panel className="p-5">
         <h2 className="font-semibold">Geographic coordinates</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <Stat label="Latitude" value={result.latitude} />
@@ -250,6 +265,17 @@ function IPOverview({ result }: { result: SelfProtectionIPLookup }) {
           IP geolocation is approximate. It identifies the network's likely
           geographic area, not the exact physical address of a device.
         </div>
+      </Panel>
+
+      <Panel className="p-5">
+        <details>
+          <summary className="cursor-pointer text-sm font-semibold text-slate-200">
+            Raw lookup data
+          </summary>
+          <pre className="mt-4 max-h-96 overflow-auto rounded-xl bg-black/30 p-4 text-xs leading-5 text-slate-500">
+            {JSON.stringify(result, null, 2)}
+          </pre>
+        </details>
       </Panel>
 
       <Panel className="p-5">
