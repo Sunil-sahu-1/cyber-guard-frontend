@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { Activity, BarChart3, FileAudio, Gauge, Mic, ShieldCheck, SlidersHorizontal, Volume2, X } from "lucide-react";
 import { ProtectedShell } from "@/components/layout/ProtectedShell";
 import { Button, Panel, PageTitle, RiskBadge } from "@/components/ui";
@@ -603,7 +603,7 @@ function TechnicalMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function TechnicalNote({ children }: { children: React.ReactNode }) {
+function TechnicalNote({ children }: { children: ReactNode }) {
   return (
     <div className="mt-4 rounded-xl border border-cyan-300/10 bg-cyan-300/[.03] p-4 text-xs leading-5 text-slate-500">
       <span className="font-medium text-slate-400">Analysis note: </span>
