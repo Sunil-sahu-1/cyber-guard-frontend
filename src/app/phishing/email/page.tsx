@@ -10,6 +10,8 @@ import {
   ScanSearch,
   ShieldAlert,
   Sparkles,
+  Image as ImageIcon,
+  Upload,
 } from "lucide-react";
 import { ProtectedShell } from "@/components/layout/ProtectedShell";
 import {
@@ -20,7 +22,10 @@ import {
   RiskBadge,
   Textarea,
 } from "@/components/ui";
-import { analyzeEmail } from "@/services/api/phishingApi";
+import {
+  analyzeEmail,
+  analyzeEmailScreenshot,
+} from "@/services/api/phishingApi";
 import type {
   EmailAnalysisResultDetails,
   ScanResponse,
@@ -33,6 +38,27 @@ export default function PhishingEmailPage() {
   const [result, setResult] = useState<ScanResponse | null>(null);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
+  const [ocrLoading, setOcrLoading] = useState(false);
+  const [screenshot, setScreenshot] = useState<string | null>(null);
+
+  async function handleScreenshot(file: File) {
+    setErr("");
+    setOcrLoading(true);
+
+    try {
+      const response = await analyzeEmailScreenshot(file);
+
+      setSender(response.extracted.sender ?? "");
+      setSubject(response.extracted.subject ?? "");
+      setBody(response.extracted.body ?? "");
+      setResult(response.analysis);
+      setScreenshot(URL.createObjectURL(file));
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Screenshot OCR failed");
+    } finally {
+      setOcrLoading(false);
+    }
+  }
 
   async function run() {
     if (!body.trim() && !subject.trim() && !sender.trim()) {
@@ -70,6 +96,50 @@ export default function PhishingEmailPage() {
               <p className="text-xs text-slate-500">
                 Check sender, subject and complete message content.
               </p>
+            </div>
+          </div>
+
+          <div className="mb-5 rounded-2xl border border-violet-300/15 bg-violet-300/[.04] p-4">
+            <div className="flex items-start gap-3">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-violet-400/10">
+                <ImageIcon className="h-5 w-5 text-violet-300" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="font-medium text-slate-200">
+                  Analyze email from screenshot
+                </div>
+                <p className="mt-1 text-xs leading-5 text-slate-500">
+                  Upload a screenshot of the complete email. OCR will read the
+                  full visible content, extract sender/subject/body, fill the
+                  fields automatically and run the security classification.
+                </p>
+
+                <label className="mt-3 flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-violet-300/20 bg-black/10 px-4 py-3 text-sm text-violet-200 transition hover:bg-violet-300/[.06]">
+                  <Upload className="h-4 w-4" />
+                  {ocrLoading ? "Reading screenshot..." : "Upload email screenshot"}
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/bmp"
+                    className="hidden"
+                    disabled={ocrLoading}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) void handleScreenshot(file);
+                      e.currentTarget.value = "";
+                    }}
+                  />
+                </label>
+
+                {screenshot && (
+                  <div className="mt-3 overflow-hidden rounded-xl border border-white/10 bg-black/20">
+                    <img
+                      src={screenshot}
+                      alt="Uploaded email screenshot"
+                      className="max-h-64 w-full object-contain"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
