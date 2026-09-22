@@ -1,10 +1,38 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FileAudio, Mic, ShieldCheck, Upload, X } from "lucide-react";
+import { Activity, BarChart3, FileAudio, Gauge, Mic, ShieldCheck, SlidersHorizontal, Volume2, X } from "lucide-react";
 import { ProtectedShell } from "@/components/layout/ProtectedShell";
 import { Button, Panel, PageTitle, RiskBadge } from "@/components/ui";
 import { analyzeVoice } from "@/services/api/impersonationApi";
+
+type TechnicalAnalysis = {
+  sample_rate_hz?: number;
+  channels?: number;
+  duration_seconds?: number;
+  loudness_analysis?: {
+    peak_amplitude_db?: number;
+    rms_level_db?: number;
+    dynamic_range_db?: number;
+    crest_factor?: number;
+  };
+  frequency_analysis?: Record<string, number>;
+  stereo_analysis?: {
+    stereo_width_percent?: number;
+    phase_correlation?: number;
+    left_channel_level_db?: number;
+    right_channel_level_db?: number;
+  };
+  quality_metrics?: {
+    signal_to_noise_ratio_db?: number;
+    dc_offset_percent?: number;
+    clipping_detected?: boolean;
+    clipping_ratio_percent?: number;
+    overall_quality?: number;
+    headroom_db?: number;
+  };
+  quality_note?: string;
+};
 
 type Result = {
   risk_score: number;
@@ -17,6 +45,7 @@ type Result = {
   detector_note?: string;
   features?: Record<string, unknown>;
   signal_components?: Record<string, number>;
+  technical_analysis?: TechnicalAnalysis;
 };
 
 const TYPES = [
@@ -396,6 +425,10 @@ function VoiceResult({ result }: { result: Result }) {
         </details>
       )}
 
+      {result.technical_analysis && (
+        <TechnicalAudioAnalysis data={result.technical_analysis} />
+      )}
+
       {result.detector_note && (
         <div className="mt-4 rounded-xl border border-amber-300/10 bg-amber-300/[.03] p-4 text-xs leading-5 text-slate-500">
           <span className="font-medium text-slate-400">Detector note: </span>
@@ -405,6 +438,180 @@ function VoiceResult({ result }: { result: Result }) {
     </Panel>
   );
 }
+function TechnicalAudioAnalysis({ data }: { data: TechnicalAnalysis }) {
+  const [activeTab, setActiveTab] = useState<"loudness" | "frequency" | "stereo" | "quality">("loudness");
+
+  const loudness = data.loudness_analysis ?? {};
+  const stereo = data.stereo_analysis ?? {};
+  const quality = data.quality_metrics ?? {};
+  const frequency = data.frequency_analysis ?? {};
+
+  const frequencyLabels: Record<string, { label: string; range: string }> = {
+    sub_bass: { label: "Sub Bass", range: "20–60 Hz" },
+    bass: { label: "Bass", range: "60–250 Hz" },
+    low_mid: { label: "Low Mid", range: "250–500 Hz" },
+    mid: { label: "Mid", range: "500–2k Hz" },
+    high_mid: { label: "High Mid", range: "2k–4k Hz" },
+    presence: { label: "Presence", range: "4k–6k Hz" },
+    brilliance: { label: "Brilliance", range: "6k–20k Hz" },
+  };
+
+  const number = (value: unknown, digits = 2) =>
+    typeof value === "number" && Number.isFinite(value) ? value.toFixed(digits) : "—";
+
+  const tabs = [
+    { id: "loudness" as const, label: "Loudness Analysis", icon: Volume2 },
+    { id: "frequency" as const, label: "Frequency Analysis", icon: BarChart3 },
+    { id: "stereo" as const, label: "Stereo Analysis", icon: SlidersHorizontal },
+    { id: "quality" as const, label: "Quality Metrics", icon: Gauge },
+  ];
+
+  return (
+    <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/30">
+      <div className="border-b border-white/10 px-4 pt-3">
+        <div className="flex gap-1 overflow-x-auto">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={
+                  "flex min-w-max items-center gap-2 border-b-2 px-3 py-3 text-xs font-medium transition " +
+                  (active
+                    ? "border-cyan-300 text-cyan-300"
+                    : "border-transparent text-slate-500 hover:text-slate-300")
+                }
+              >
+                <Icon className="h-4 w-4" />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="p-5">
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-200">
+              <Activity className="h-4 w-4 text-cyan-300" />
+              Technical Audio Analysis
+            </div>
+            <p className="mt-1 text-xs text-slate-600">
+              Measurements extracted directly from the uploaded recording.
+            </p>
+          </div>
+          <div className="hidden rounded-lg border border-white/10 bg-white/[.03] px-3 py-2 text-right sm:block">
+            <div className="text-[10px] uppercase tracking-[.14em] text-slate-600">Recording</div>
+            <div className="mt-1 text-xs text-slate-300">
+              {number(data.duration_seconds)}s • {data.channels ?? "—"} channel • {data.sample_rate_hz ?? "—"} Hz
+            </div>
+          </div>
+        </div>
+
+        {activeTab === "loudness" && (
+          <div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <TechnicalMetric label="Peak Amplitude" value={number(loudness.peak_amplitude_db) + " dB"} />
+              <TechnicalMetric label="RMS Level" value={number(loudness.rms_level_db) + " dB"} />
+              <TechnicalMetric label="Dynamic Range" value={number(loudness.dynamic_range_db) + " dB"} />
+              <TechnicalMetric label="Crest Factor" value={number(loudness.crest_factor)} />
+            </div>
+            <TechnicalNote>
+              Peak level shows the highest recorded amplitude, while RMS represents the average energy level.
+            </TechnicalNote>
+          </div>
+        )}
+
+        {activeTab === "frequency" && (
+          <div>
+            <div className="rounded-xl border border-white/10 bg-white/[.02] p-4">
+              <div className="space-y-4">
+                {Object.entries(frequencyLabels).map(([key, meta]) => {
+                  const value = Number(frequency[key] ?? 0);
+                  return (
+                    <div key={key}>
+                      <div className="mb-1.5 flex items-center justify-between gap-3 text-xs">
+                        <span className="text-slate-400">
+                          {meta.label} <span className="text-slate-600">({meta.range})</span>
+                        </span>
+                        <span className="font-medium text-slate-300">{number(value, 1)}%</span>
+                      </div>
+                      <div className="h-2 overflow-hidden rounded-full bg-white/[.06]">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-violet-400"
+                          style={{ width: Math.min(100, Math.max(0, value)) + "%" }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <TechnicalNote>
+              Frequency balance shows how the recording's energy is distributed across the audible spectrum.
+            </TechnicalNote>
+          </div>
+        )}
+
+        {activeTab === "stereo" && (
+          <div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <TechnicalMetric label="Stereo Width" value={number(stereo.stereo_width_percent, 1) + "%"} />
+              <TechnicalMetric label="Phase Correlation" value={number(stereo.phase_correlation, 3)} />
+              <TechnicalMetric label="Left Channel Level" value={number(stereo.left_channel_level_db) + " dB"} />
+              <TechnicalMetric label="Right Channel Level" value={number(stereo.right_channel_level_db) + " dB"} />
+            </div>
+            <TechnicalNote>
+              Stereo width and phase correlation describe the relationship between the left and right channels.
+            </TechnicalNote>
+          </div>
+        )}
+
+        {activeTab === "quality" && (
+          <div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <TechnicalMetric label="Signal-to-Noise Ratio" value={number(quality.signal_to_noise_ratio_db, 1) + " dB"} />
+              <TechnicalMetric label="DC Offset" value={number(quality.dc_offset_percent, 4) + "%"} />
+              <TechnicalMetric
+                label="Clipping Detected"
+                value={quality.clipping_detected === undefined ? "—" : quality.clipping_detected ? "Yes" : "No"}
+              />
+              <TechnicalMetric label="Overall Quality" value={quality.overall_quality === undefined ? "—" : quality.overall_quality + "/100"} />
+            </div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <TechnicalMetric label="Clipping Ratio" value={number(quality.clipping_ratio_percent, 4) + "%"} />
+              <TechnicalMetric label="Headroom" value={number(quality.headroom_db) + " dB"} />
+            </div>
+            {data.quality_note && <TechnicalNote>{data.quality_note}</TechnicalNote>}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function TechnicalMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/[.02] p-4">
+      <div className="text-xs uppercase tracking-[.12em] text-slate-600">{label}</div>
+      <div className="mt-2 text-xl font-semibold text-slate-200">{value}</div>
+    </div>
+  );
+}
+
+function TechnicalNote({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mt-4 rounded-xl border border-cyan-300/10 bg-cyan-300/[.03] p-4 text-xs leading-5 text-slate-500">
+      <span className="font-medium text-slate-400">Analysis note: </span>
+      {children}
+    </div>
+  );
+}
+
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-white/10 bg-white/[.02] p-3">
