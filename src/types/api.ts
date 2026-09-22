@@ -77,6 +77,26 @@ export interface ScanResponse {
         redirect_chain?: string[];
         shortener_detected?: boolean;
       };
+      url_intelligence?: {
+        source_url?: string;
+        brand?: string | null;
+        tld?: string | null;
+        ip_address?: string | null;
+        location?: string | null;
+        hosting_provider?: string | null;
+        asn?: string | number | null;
+        page_title?: string | null;
+        status_code?: number | null;
+        content_type?: string | null;
+        detection_date?: string | null;
+        certificate?: {
+          subject?: string;
+          issuer?: string;
+          valid_from?: string;
+          valid_until?: string;
+          status?: string;
+        } | null;
+      };
       [key: string]: unknown;
     };
     [key: string]: unknown;
