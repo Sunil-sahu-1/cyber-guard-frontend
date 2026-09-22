@@ -94,6 +94,7 @@ function Result({ result }: { result: ScanResponse }) {
       <Info title="Explanation">
         <p className="text-sm leading-6 text-slate-400">{result.explanation}</p>
       </Info>
+      <RedirectDestination result={result} />
       <Info title="Indicators">
         <div className="flex flex-wrap gap-2">
           {result.indicators?.length ? (
@@ -122,6 +123,45 @@ function Result({ result }: { result: ScanResponse }) {
     </Panel>
   );
 }
+function RedirectDestination({ result }: { result: ScanResponse }) {
+  const security = result.model_results?.url_security_engine;
+  const finalUrl = security?.final_url;
+  const originalUrl = security?.original_url ?? result.url;
+  const redirectAnalysis = security?.redirect_analysis;
+  const redirectCount = redirectAnalysis?.redirect_count;
+
+  if (!finalUrl || finalUrl === originalUrl) return null;
+
+  return (
+    <Info title="Final Destination">
+      <div className="space-y-3">
+        <div>
+          <div className="text-xs text-slate-600">Original URL</div>
+          <div className="mt-1 break-all rounded-lg bg-white/[.03] px-3 py-2 text-sm text-slate-300">
+            {originalUrl}
+          </div>
+        </div>
+        <div>
+          <div className="text-xs text-slate-600">Final Destination URL</div>
+          <a
+            href={finalUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-1 block break-all rounded-lg bg-cyan-400/5 px-3 py-2 text-sm text-cyan-300 underline decoration-cyan-300/30 underline-offset-4 hover:text-cyan-200"
+          >
+            {finalUrl}
+          </a>
+        </div>
+        {typeof redirectCount === "number" && (
+          <div className="text-xs text-slate-500">
+            Redirects detected: <span className="text-slate-300">{redirectCount}</span>
+          </div>
+        )}
+      </div>
+    </Info>
+  );
+}
+
 function Info({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mt-5 rounded-xl border border-white/10 p-4">
