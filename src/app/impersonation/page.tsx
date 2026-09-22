@@ -222,11 +222,11 @@ export default function MediaGuard() {
 
           <ModeButton
             active={kind === "video"}
-            onClick={() => switchMode("video")}
+            onClick={() => setErr("Video analysis is currently disabled because no video-specific trained model is included.")}
             icon={<FileVideo className="h-5 w-5 text-violet-300" />}
-            title="Video Analysis"
-            description="Frame and temporal analysis"
-            formats="MP4, MOV, AVI, MKV, WEBM"
+            title="Video Analysis - Disabled"
+            description="Video model skipped from current training scope"
+            formats="No trained video detector available"
           />
 
         </div>
