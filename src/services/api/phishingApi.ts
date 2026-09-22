@@ -21,3 +21,28 @@ export async function getPhishingScan(id: number) {
 export async function deletePhishingScan(id: number) {
   return apiFetch(`/phishing/${id}/delete/`, { method: "DELETE" });
 }
+
+export interface EmailScreenshotOCRResponse {
+  message: string;
+  ocr: {
+    raw_text: string;
+    text_length: number;
+    engine: string;
+  };
+  extracted: {
+    sender: string;
+    subject: string;
+    body: string;
+  };
+  analysis: ScanResponse;
+}
+
+export async function analyzeEmailScreenshot(file: File) {
+  const formData = new FormData();
+  formData.append("screenshot", file);
+
+  return apiFetch<EmailScreenshotOCRResponse>("/phishing/email/ocr/", {
+    method: "POST",
+    body: formData,
+  });
+}
