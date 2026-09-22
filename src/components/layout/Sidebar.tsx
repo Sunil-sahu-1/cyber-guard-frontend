@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Activity,
   AlertTriangle,
   BookOpen,
   FileSearch,
@@ -28,7 +27,6 @@ const items = [
   ["/impersonation", "Media Guard", ScanFace],
   ["/voice-verification", "Voice Verification", Mic],
   ["/malware", "Malware Guard", FileWarning],
-  ["/anomalies", "Anomaly Center", Activity],
   ["/incidents", "Incidents", AlertTriangle],
   ["/audit-logs", "Audit Logs", BookOpen],
   ["/self-protection", "Self Protection", UserRoundSearch],
