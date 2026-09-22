@@ -228,11 +228,11 @@ export default function MediaGuard() {
 
           <ModeButton
             active={kind === "video"}
-            onClick={() => setErr("Video analysis is currently disabled because no video-specific trained model is included.")}
+            onClick={() => switchMode("video")}
             icon={<FileVideo className="h-5 w-5 text-violet-300" />}
-            title="Video Analysis - Disabled"
-            description="Video model skipped from current training scope"
-            formats="No trained video detector available"
+            title="Video Analysis"
+            description="Basic frame, face and visual anomaly screening"
+            formats="MP4, MOV, AVI, MKV, WEBM"
           />
 
         </div>
@@ -508,16 +508,34 @@ function VideoUploader({
         />
       )}
 
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        {[
+          ["Face detection", "Face presence across sampled frames"],
+          ["Visual artifacts", "Brightness, sharpness and frame-change signals"],
+          ["Metadata", "Resolution, FPS, duration and frame count"],
+        ].map(([title, text]) => (
+          <div
+            key={title}
+            className="rounded-xl border border-violet-300/10 bg-violet-300/[.03] p-3"
+          >
+            <div className="text-xs font-medium text-slate-300">{title}</div>
+            <div className="mt-1 text-xs leading-5 text-slate-600">
+              {text}
+            </div>
+          </div>
+        ))}
+      </div>
+
       <div className="mt-4 rounded-xl border border-violet-300/10 bg-violet-300/[.03] p-4">
         <div className="flex gap-3">
           <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-violet-300" />
           <div>
             <div className="text-sm font-medium text-slate-300">
-              Video-specific analysis
+              Basic video screening
             </div>
             <p className="mt-1 text-xs leading-5 text-slate-500">
-              Frame-level AI inference and temporal consistency signals are
-              analyzed independently from photo analysis.
+              Current analysis uses OpenCV frame sampling, face detection and
+              visual heuristics. A trained video deepfake model can be added later.
             </p>
           </div>
         </div>
