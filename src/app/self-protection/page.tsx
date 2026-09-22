@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Activity,
   Globe2,
@@ -10,6 +10,8 @@ import {
   RefreshCw,
   Search,
   Shield,
+  Fingerprint,
+  CheckCircle2,
 } from "lucide-react";
 import { ProtectedShell } from "@/components/layout/ProtectedShell";
 import { Button, Input, PageTitle, Panel } from "@/components/ui";
@@ -89,6 +91,8 @@ export default function SelfProtectionPage() {
         }
       />
 
+      <DeviceFingerprint />
+
       <div className="grid gap-5 xl:grid-cols-[.9fr_1.5fr]">
         <Panel className="p-5">
           <div className="flex items-center gap-3">
@@ -157,6 +161,134 @@ export default function SelfProtectionPage() {
         </div>
       </div>
     </ProtectedShell>
+  );
+}
+
+function DeviceFingerprint() {
+  const [consent, setConsent] = useState(false);
+  const [fingerprint, setFingerprint] = useState<string | null>(null);
+  const [signals, setSignals] = useState<Record<string, string | number | boolean>>({});
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const collectSignals = useMemo(() => async () => {
+    const nav = navigator;
+    const screenInfo = window.screen;
+    const connection = (nav as Navigator & { connection?: { effectiveType?: string; type?: string } }).connection;
+    const values: Record<string, string | number | boolean> = {
+      user_agent: nav.userAgent,
+      platform: nav.platform || "Unknown",
+      language: nav.language || "Unknown",
+      languages: nav.languages?.join(",") || "Unknown",
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Unknown",
+      timezone_offset: new Date().getTimezoneOffset(),
+      screen: screenInfo.width + "x" + screenInfo.height,
+      available_screen: screenInfo.availWidth + "x" + screenInfo.availHeight,
+      color_depth: screenInfo.colorDepth,
+      pixel_depth: screenInfo.pixelDepth,
+      device_pixel_ratio: window.devicePixelRatio,
+      cpu_cores: nav.hardwareConcurrency || 0,
+      device_memory_gb: (nav as Navigator & { deviceMemory?: number }).deviceMemory || 0,
+      touch_points: nav.maxTouchPoints || 0,
+      touch_support: nav.maxTouchPoints > 0,
+      cookies_enabled: nav.cookieEnabled,
+      do_not_track: nav.doNotTrack || "unspecified",
+      online: nav.onLine,
+      connection_type: connection?.effectiveType || connection?.type || "Unknown",
+    };
+    return values;
+  }, []);
+
+  async function generateFingerprint() {
+    if (!consent) {
+      setMessage("Please accept the terms and conditions before generating your device fingerprint.");
+      return;
+    }
+    setBusy(true);
+    setMessage("");
+    try {
+      const values = await collectSignals();
+      const canonical = Object.keys(values).sort().map((key) => key + "=" + String(values[key])).join("|");
+      const encoded = new TextEncoder().encode(canonical);
+      const digest = await crypto.subtle.digest("SHA-256", encoded);
+      const hex = Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+      setSignals(values);
+      setFingerprint("CG-" + hex.slice(0, 32).toUpperCase());
+      setMessage("Fingerprint generated using the signals you explicitly allowed Cyber Guard to read.");
+    } catch {
+      setMessage("Device fingerprint generation failed in this browser.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Panel className="mb-5 p-5">
+      <div className="flex items-start gap-3">
+        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyan-400/10 ring-1 ring-cyan-300/20">
+          <Fingerprint className="h-5 w-5 text-cyan-300" />
+        </div>
+        <div>
+          <h2 className="font-semibold">Device Fingerprint</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-500">
+            Cyber Guard reads limited browser and device signals only after you give explicit permission. The fingerprint is a SHA-256 hash of those signals; raw values are not sent to the backend by this feature.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-5 rounded-xl border border-cyan-300/10 bg-cyan-300/[.04] p-4 text-sm leading-6 text-slate-400">
+        <div className="font-medium text-slate-200">Terms & Conditions — required consent</div>
+        <ul className="mt-2 list-disc space-y-1 pl-5">
+          <li>You choose whether Cyber Guard may read the browser/device signals listed below.</li>
+          <li>Without your consent, this fingerprint feature will not read those signals or generate a fingerprint.</li>
+          <li>The browser does not expose sensitive hardware identifiers such as your MAC address, IMEI, device serial number or Windows product key to this page.</li>
+          <li>Some values may be unavailable or approximate because browser privacy controls can limit access.</li>
+          <li>You can decline by leaving the checkbox unchecked; other Self Protection features continue to work separately.</li>
+        </ul>
+      </div>
+
+      <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[.025] p-4 text-sm text-slate-300">
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(event) => {
+            setConsent(event.target.checked);
+            if (!event.target.checked) {
+              setFingerprint(null);
+              setSignals({});
+              setMessage("Consent withdrawn. Device fingerprint data displayed by this feature has been cleared.");
+            } else {
+              setMessage("");
+            }
+          }}
+          className="mt-1 h-4 w-4 accent-cyan-300"
+        />
+        <span>I have read and agree to these terms and I allow Cyber Guard to read the listed browser/device signals for this fingerprint.</span>
+      </label>
+
+      <Button className="mt-4" onClick={generateFingerprint} loading={busy} disabled={!consent}>
+        <Fingerprint className="h-4 w-4" />
+        Generate Device Fingerprint
+      </Button>
+
+      {message && <div className="mt-3 text-xs text-slate-500">{message}</div>}
+
+      {fingerprint && (
+        <div className="mt-5">
+          <div className="rounded-xl border border-emerald-300/10 bg-emerald-300/[.04] p-4">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[.16em] text-emerald-300">
+              <CheckCircle2 className="h-4 w-4" /> Fingerprint generated
+            </div>
+            <div className="mt-2 break-all font-mono text-lg font-semibold text-slate-100">{fingerprint}</div>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {Object.entries(signals).map(([key, value]) => (
+              <Stat key={key} label={key.replaceAll("_", " ")} value={value} />
+            ))}
+          </div>
+        </div>
+      )}
+    </Panel>
   );
 }
 
