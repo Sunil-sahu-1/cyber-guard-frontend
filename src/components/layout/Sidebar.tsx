@@ -15,6 +15,7 @@ import {
   Mic,
   ScanFace,
   Shield,
+  UserRoundSearch,
   TriangleAlert,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,6 +31,7 @@ const items = [
   ["/anomalies", "Anomaly Center", Activity],
   ["/incidents", "Incidents", AlertTriangle],
   ["/audit-logs", "Audit Logs", BookOpen],
+  ["/self-protection", "Self Protection", UserRoundSearch],
 ] as const;
 
 export function Sidebar() {
