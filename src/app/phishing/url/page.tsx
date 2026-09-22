@@ -95,6 +95,7 @@ function Result({ result }: { result: ScanResponse }) {
         <p className="text-sm leading-6 text-slate-400">{result.explanation}</p>
       </Info>
       <RedirectDestination result={result} />
+      <UrlIntelligence result={result} />
       <Info title="Indicators">
         <div className="flex flex-wrap gap-2">
           {result.indicators?.length ? (
@@ -183,6 +184,40 @@ function RedirectDestination({ result }: { result: ScanResponse }) {
   );
 }
 
+function UrlIntelligence({ result }: { result: ScanResponse }) {
+  const intel = result.model_results?.url_security_engine?.url_intelligence;
+  if (!intel) return null;
+
+  const certificate = intel.certificate;
+  const rows = [
+    ["Source URL", intel.source_url],
+    ["Brand / Host", intel.brand ?? "--"],
+    ["TLD", intel.tld ? "." + intel.tld : "--"],
+    ["IP Address", intel.ip_address ?? "--"],
+    ["Location", intel.location ?? "--"],
+    ["Hosting Provider", intel.hosting_provider ?? "--"],
+    ["ASN", intel.asn ?? "--"],
+    ["Page Title", intel.page_title ?? "--"],
+    ["HTTP Status", intel.status_code ?? "--"],
+    ["Content Type", intel.content_type ?? "--"],
+    ["Detection Date", intel.detection_date ? new Date(intel.detection_date).toLocaleString() : "--"],
+    ["Certificate Issuer", certificate?.issuer ?? "--"],
+    ["Certificate Valid Until", certificate?.valid_until ?? "--"],
+  ];
+
+  return (
+    <Info title="URL Intelligence">
+      <div className="grid gap-3 sm:grid-cols-2">
+        {rows.map(([label, value]) => (
+          <div key={label} className="rounded-lg bg-white/[.03] px-3 py-2">
+            <div className="text-xs text-slate-600">{label}</div>
+            <div className="mt-1 break-all text-sm text-slate-300">{value}</div>
+          </div>
+        ))}
+      </div>
+    </Info>
+  );
+}
 function Info({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mt-5 rounded-xl border border-white/10 p-4">
