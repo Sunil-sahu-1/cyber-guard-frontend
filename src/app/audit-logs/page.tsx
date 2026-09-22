@@ -8,6 +8,7 @@ import type { AuditLog } from "@/types/api";
 export default function AuditLogs() {
   const [items, setItems] = useState<AuditLog[]>([]),
     [q, setQ] = useState("");
+  const [publicIPv4, setPublicIPv4] = useState<string | null>(null);
   async function load() {
     try {
       setItems(await listAuditLogs(q ? new URLSearchParams({ search: q }).toString() : ""));
@@ -15,6 +16,12 @@ export default function AuditLogs() {
   }
   useEffect(() => {
     load();
+    fetch("https://api.ipify.org?format=json", { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (data?.ip) setPublicIPv4(String(data.ip));
+      })
+      .catch(() => setPublicIPv4(null));
   }, []);
   return (
     <ProtectedShell>
@@ -58,7 +65,14 @@ export default function AuditLogs() {
                   <tr key={x.id} className="border-b border-white/5">
                     <td className="px-5 py-4 text-cyan-200">{x.action}</td>
                     <td className="max-w-xl px-5 py-4 text-slate-400">{x.description}</td>
-                    <td className="px-5 py-4 text-slate-500">{x.ip_address}</td>
+                    <td className="px-5 py-4 text-slate-500">
+                      <div>{x.ip_address || "Unknown"}</div>
+                      {publicIPv4 && (
+                        <div className="mt-1 text-xs text-cyan-300/80">
+                          IPv4: {publicIPv4}
+                        </div>
+                      )}
+                    </td>
                     <td className="px-5 py-4 text-slate-400">{x.status}</td>
                     <td className="px-5 py-4 text-slate-500">
                       {new Date(x.created_at).toLocaleString()}
