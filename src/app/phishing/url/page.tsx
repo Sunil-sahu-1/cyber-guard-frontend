@@ -129,6 +129,7 @@ function RedirectDestination({ result }: { result: ScanResponse }) {
   const originalUrl = security?.original_url ?? result.url;
   const redirectAnalysis = security?.redirect_analysis;
   const redirectCount = redirectAnalysis?.redirect_count;
+  const redirectChain = redirectAnalysis?.redirect_chain ?? [];
 
   if (!finalUrl || finalUrl === originalUrl) return null;
 
@@ -155,6 +156,26 @@ function RedirectDestination({ result }: { result: ScanResponse }) {
         {typeof redirectCount === "number" && (
           <div className="text-xs text-slate-500">
             Redirects detected: <span className="text-slate-300">{redirectCount}</span>
+          </div>
+        )}
+        {redirectChain.length > 1 && (
+          <div>
+            <div className="text-xs text-slate-600">Complete Redirect Chain</div>
+            <div className="mt-2 space-y-2">
+              {redirectChain.map((link, index) => (
+                <div key={`${link}-${index}`} className="flex items-start gap-2 rounded-lg bg-white/[.03] px-3 py-2 text-sm">
+                  <span className="shrink-0 text-xs text-slate-600">{index + 1}.</span>
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="break-all text-cyan-300 underline decoration-cyan-300/30 underline-offset-4 hover:text-cyan-200"
+                  >
+                    {link}
+                  </a>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
