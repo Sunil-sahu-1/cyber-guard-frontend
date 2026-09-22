@@ -50,6 +50,35 @@ export interface Threat {
   evidence: ThreatEvidence[];
   analyses: ThreatAnalysis[];
 }
+export interface EmailAnalysisResultDetails {
+  email_validation?: {
+    is_email?: boolean;
+    status?: string;
+    confidence?: number;
+    sender_valid?: boolean;
+    subject_present?: boolean;
+    body_present?: boolean;
+    email_addresses_found?: string[];
+    checks?: string[];
+  };
+  content_category?: string;
+  spam_analysis?: {
+    detected?: boolean;
+    score?: number;
+    keywords?: string[];
+    reasons?: string[];
+  };
+  promotional_analysis?: {
+    detected?: boolean;
+    category?: string | null;
+    keywords?: string[];
+    event_keywords?: string[];
+    registration_keywords?: string[];
+    unsubscribe_detected?: boolean;
+  };
+  model_results?: Record<string, unknown>;
+}
+
 export interface ScanResponse {
   message: string;
   url?: string;
@@ -62,6 +91,10 @@ export interface ScanResponse {
   recommendation?: string;
   explanation: string;
   recommended_actions: string[];
+  email_validation?: EmailAnalysisResultDetails["email_validation"];
+  content_category?: string;
+  spam_analysis?: EmailAnalysisResultDetails["spam_analysis"];
+  promotional_analysis?: EmailAnalysisResultDetails["promotional_analysis"];
   threat_id: number;
   scan_id: number;
   incident?: { id: number; severity: Severity; status: string };
@@ -114,7 +147,7 @@ export interface PhishingScan {
   created_at: string;
   updated_at: string;
   url_analysis?: Record<string, unknown>;
-  email_analysis?: Record<string, unknown>;
+  email_analysis?: EmailAnalysisResultDetails & Record<string, unknown>;
 }
 export interface ImpersonationScan {
   id: number;
