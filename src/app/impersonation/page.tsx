@@ -204,6 +204,7 @@ export default function MediaGuard() {
     }
 
     setResult(null);
+    setSelectedEvidence(null);
     setErr("");
   }
 
