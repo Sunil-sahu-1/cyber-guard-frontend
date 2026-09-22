@@ -907,7 +907,7 @@ function WebList({
           const record = (item ?? {}) as Record<string, unknown>;
           const url = String(record.url ?? "");
           const titleText = page ? String(record.page_title ?? "") : "";
-          if (!/^https?:\\/\\//i.test(url)) return null;
+          if (!/^https?:\/\//i.test(url)) return null;
 
           return (
             <a
