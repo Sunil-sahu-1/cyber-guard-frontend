@@ -818,12 +818,6 @@ function WebPresence({ data }: { data: Record<string, unknown> }) {
   const entities = Array.isArray(data.web_entities) ? data.web_entities : [];
   const labels = Array.isArray(data.best_guess_labels) ? data.best_guess_labels : [];
 
-  const link = (value: unknown) => {
-    const url = typeof value === "string" ? value : String((value as Record<string, unknown>)?.url ?? "");
-    if (!/^https?:\\/\\//i.test(url)) return null;
-    return url;
-  };
-
   return (
     <div className="mt-6 rounded-2xl border border-cyan-300/10 bg-cyan-300/[.03] p-4">
       <div className="flex items-start justify-between gap-3">
