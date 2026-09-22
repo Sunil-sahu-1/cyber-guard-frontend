@@ -17,6 +17,7 @@ import {
 } from "@/services/api/impersonationApi";
 
 type AnalysisKind = "image" | "video";
+type EvidenceSection = "face" | "visual" | "metadata";
 
 type AnalysisResult = {
   risk_score: number;
@@ -81,6 +82,7 @@ export default function MediaGuard() {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState("");
+  const [selectedEvidence, setSelectedEvidence] = useState<EvidenceSection | null>(null);
 
   const file = kind === "image" ? imageFile : videoFile;
 
@@ -100,6 +102,7 @@ export default function MediaGuard() {
     setKind(next);
     setErr("");
     setResult(null);
+    setSelectedEvidence(null);
   }
 
   function validateFile(selected: File, type: AnalysisKind) {
@@ -141,6 +144,7 @@ export default function MediaGuard() {
 
     setImageFile(selected);
     setResult(null);
+    setSelectedEvidence(null);
     setErr("");
   }
 
@@ -156,6 +160,7 @@ export default function MediaGuard() {
 
     setVideoFile(selected);
     setResult(null);
+    setSelectedEvidence(null);
     setErr("");
   }
 
@@ -241,6 +246,8 @@ export default function MediaGuard() {
               inputRef={imageRef}
               onSelect={selectImage}
               onClear={clearCurrentFile}
+              selectedEvidence={selectedEvidence}
+              onEvidenceSelect={setSelectedEvidence}
             />
           ) : (
             <VideoUploader
@@ -268,7 +275,7 @@ export default function MediaGuard() {
         </Panel>
 
         {result ? (
-          <Result result={result} kind={kind} />
+          <Result result={result} kind={kind} selectedEvidence={selectedEvidence} onResetEvidence={() => setSelectedEvidence(null)} />
         ) : (
           <Panel className="grid min-h-[500px] place-items-center p-6">
             <div className="text-center">
@@ -345,12 +352,16 @@ function ImageUploader({
   inputRef,
   onSelect,
   onClear,
+  selectedEvidence,
+  onEvidenceSelect,
 }: {
   file: File | null;
   preview: string;
   inputRef: React.RefObject<HTMLInputElement | null>;
   onSelect: (file: File | undefined) => void;
   onClear: () => void;
+  selectedEvidence: EvidenceSection | null;
+  onEvidenceSelect: (section: EvidenceSection) => void;
 }) {
   return (
     <>
@@ -406,20 +417,34 @@ function ImageUploader({
 
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
         {[
-          ["Face detection", "Facial presence and structure"],
-          ["Visual artifacts", "Edges, lighting and compression"],
-          ["Metadata", "Available file metadata signals"],
-        ].map(([title, text]) => (
-          <div
-            key={title}
-            className="rounded-xl border border-white/10 bg-white/[.02] p-3"
-          >
-            <div className="text-xs font-medium text-slate-300">{title}</div>
-            <div className="mt-1 text-xs leading-5 text-slate-600">
-              {text}
-            </div>
-          </div>
-        ))}
+          ["face", "Face detection", "Facial presence, count and boxes"],
+          ["visual", "Visual artifacts", "Image quality and forensic heuristics"],
+          ["metadata", "Metadata", "EXIF, format and camera information"],
+        ].map(([section, title, text]) => {
+          const key = section as EvidenceSection;
+          const active = selectedEvidence === key;
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => onEvidenceSelect(key)}
+              className={
+                "rounded-xl border p-3 text-left transition " +
+                (active
+                  ? "border-cyan-300/40 bg-cyan-300/10"
+                  : "border-white/10 bg-white/[.02] hover:bg-white/[.05]")
+              }
+            >
+              <div className="text-xs font-medium text-slate-300">{title}</div>
+              <div className="mt-1 text-xs leading-5 text-slate-600">
+                {text}
+              </div>
+              <div className="mt-2 text-[10px] uppercase tracking-wider text-cyan-300/70">
+                {active ? "Showing this section" : "Click to view"}
+              </div>
+            </button>
+          );
+        })}
       </div>
     </>
   );
@@ -536,35 +561,42 @@ function FileInfo({
 function Result({
   result,
   kind,
+  selectedEvidence,
+  onResetEvidence,
 }: {
   result: AnalysisResult;
   kind: AnalysisKind;
+  selectedEvidence: EvidenceSection | null;
+  onResetEvidence: () => void;
 }) {
-  const keys =
-    kind === "image"
-      ? [
-          "prediction",
-          "confidence",
-          "face_detected",
-          "multiple_faces",
-          "face_manipulation_indicator",
-          "lighting_inconsistency",
-          "edge_artifact_indicator",
-          "compression_anomaly",
-          "metadata_missing",
-        ]
-      : [
-          "prediction",
-          "confidence",
-          "face_detected",
-          "multiple_faces",
-          "temporal_consistency",
-          "frame_anomaly",
-          "motion_inconsistency",
-          "face_manipulation_indicator",
-          "compression_anomaly",
-          "metadata_missing",
-        ];
+  const features = (result.features ?? {}) as Record<string, unknown>;
+  const face = (result.face_detection ?? {}) as Record<string, unknown>;
+  const visual = (result.visual_artifacts ?? {}) as Record<string, unknown>;
+  const metadata = (result.metadata ?? {}) as Record<string, unknown>;
+
+  const sections = {
+    face: face,
+    visual: visual,
+    metadata: metadata,
+  };
+
+  const sectionLabels = {
+    face: "Face detection",
+    visual: "Visual artifacts",
+    metadata: "Metadata",
+  };
+
+  const visibleSections: EvidenceSection[] = selectedEvidence
+    ? [selectedEvidence]
+    : ["face", "visual", "metadata"];
+
+  const renderValue = (value: unknown): string => {
+    if (value === null || value === undefined) return "Not available";
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    if (Array.isArray(value)) return value.length ? value.join(", ") : "None";
+    if (typeof value === "object") return JSON.stringify(value, null, 2);
+    return String(value);
+  };
 
   return (
     <Panel className="p-6">
@@ -577,32 +609,89 @@ function Result({
             {result.risk_score}/100
           </div>
         </div>
-        <RiskBadge value={result.result} />
+        <RiskBadge value={result.result ?? result.severity ?? "UNKNOWN"} />
       </div>
 
       <div className="mt-5 rounded-xl border border-white/10 bg-white/[.02] p-4">
         <div className="text-sm font-medium">Analysis explanation</div>
         <p className="mt-2 text-sm leading-6 text-slate-400">
-          {result.explanation}
+          {result.explanation ??
+            result.recommendation ??
+            "Analysis completed."}
         </p>
       </div>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        {Object.entries(result)
-          .filter(([key]) => keys.includes(key))
-          .map(([key, value]) => (
-            <div
-              key={key}
-              className="rounded-xl border border-white/10 p-3"
-            >
-              <div className="text-xs capitalize text-slate-600">
-                {humanize(key)}
-              </div>
-              <div className="mt-1 text-sm text-slate-300">
-                {String(value)}
-              </div>
+        {[
+          ["Prediction", result.prediction],
+          ["Confidence", result.confidence],
+          ["Model score", features.ensemble_score ?? result.risk_score],
+          ["Trained model", features.fine_tuned_models],
+        ].map(([label, value]) => (
+          <div key={String(label)} className="rounded-xl border border-white/10 p-3">
+            <div className="text-xs uppercase tracking-[.12em] text-slate-600">
+              {label}
             </div>
-          ))}
+            <div className="mt-1 whitespace-pre-wrap text-sm text-slate-300">
+              {renderValue(value)}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6 flex items-center justify-between">
+        <div>
+          <div className="text-sm font-medium">Evidence details</div>
+          <div className="mt-1 text-xs text-slate-600">
+            {selectedEvidence
+              ? `Showing ${sectionLabels[selectedEvidence]} only.`
+              : "All evidence sections are shown."}
+          </div>
+        </div>
+        {selectedEvidence && (
+          <button
+            type="button"
+            onClick={onResetEvidence}
+            className="text-xs text-cyan-300 hover:text-cyan-200"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      <div className="mt-3 grid gap-4">
+        {visibleSections.map((section) => {
+          const data = sections[section];
+          const entries = Object.entries(data);
+          return (
+            <div
+              key={section}
+              className="rounded-xl border border-white/10 bg-white/[.02] p-4"
+            >
+              <div className="text-sm font-medium text-slate-200">
+                {sectionLabels[section]}
+              </div>
+              {entries.length ? (
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  {entries.map(([key, value]) => (
+                    <div key={key} className="rounded-lg border border-white/5 bg-black/10 p-3">
+                      <div className="text-xs capitalize text-slate-600">
+                        {humanize(key)}
+                      </div>
+                      <pre className="mt-1 whitespace-pre-wrap break-words text-xs leading-5 text-slate-300">
+                        {renderValue(value)}
+                      </pre>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-3 text-xs text-slate-500">
+                  No {sectionLabels[section].toLowerCase()} data was returned.
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {result.indicators?.length ? (
@@ -611,6 +700,7 @@ function Result({
     </Panel>
   );
 }
+
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
