@@ -29,6 +29,7 @@ type AnalysisResult = {
   detector_note?: string;
   features?: Record<string, unknown>;
   signal_components?: Record<string, number>;
+  web_presence?: Record<string, unknown>;
   [key: string]: unknown;
 };
 
@@ -716,6 +717,10 @@ function Result({
 
       {kind === "image" ? <PublicWebPresence data={webPresence} /> : null}
 
+      {result.web_presence ? (
+        <WebPresence data={result.web_presence} />
+      ) : null}
+
       {result.indicators?.length ? (
         <Indicators items={result.indicators} />
       ) : null}
@@ -798,6 +803,138 @@ function PublicWebPresence({ data }: { data: Record<string, unknown> }) {
 
       <div className="mt-3 text-[11px] leading-5 text-slate-600">
         Provider: {provider}. {String(data.coverage_note ?? "")}
+      </div>
+    </div>
+  );
+}
+
+function WebPresence({ data }: { data: Record<string, unknown> }) {
+  const status = String(data.status ?? "UNKNOWN");
+  const provider = String(data.provider ?? "Web index");
+  const fullMatches = Array.isArray(data.full_matches) ? data.full_matches : [];
+  const partialMatches = Array.isArray(data.partial_matches) ? data.partial_matches : [];
+  const pages = Array.isArray(data.matching_pages) ? data.matching_pages : [];
+  const similar = Array.isArray(data.visually_similar_images) ? data.visually_similar_images : [];
+  const entities = Array.isArray(data.web_entities) ? data.web_entities : [];
+  const labels = Array.isArray(data.best_guess_labels) ? data.best_guess_labels : [];
+
+  const link = (value: unknown) => {
+    const url = typeof value === "string" ? value : String((value as Record<string, unknown>)?.url ?? "");
+    if (!/^https?:\\/\\//i.test(url)) return null;
+    return url;
+  };
+
+  return (
+    <div className="mt-6 rounded-2xl border border-cyan-300/10 bg-cyan-300/[.03] p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-sm font-medium text-slate-200">Public Web Presence</div>
+          <div className="mt-1 text-xs text-slate-500">
+            Find where this image or visually related copies appear on indexed public web pages.
+          </div>
+        </div>
+        <div className="rounded-lg border border-cyan-300/20 px-2 py-1 text-[10px] uppercase tracking-wider text-cyan-300">
+          {status}
+        </div>
+      </div>
+
+      <div className="mt-3 grid gap-2 sm:grid-cols-4">
+        <Metric label="Full matches" value={String(data.full_match_count ?? fullMatches.length)} />
+        <Metric label="Partial matches" value={String(data.partial_match_count ?? partialMatches.length)} />
+        <Metric label="Matching pages" value={String(data.matching_page_count ?? pages.length)} />
+        <Metric label="Similar images" value={String(data.similar_image_count ?? similar.length)} />
+      </div>
+
+      {pages.length > 0 && (
+        <WebList title="Pages containing matching images" items={pages} page />
+      )}
+
+      {fullMatches.length > 0 && (
+        <WebList title="Full image matches" items={fullMatches} />
+      )}
+
+      {partialMatches.length > 0 && (
+        <WebList title="Partial image matches" items={partialMatches} />
+      )}
+
+      {similar.length > 0 && (
+        <WebList title="Visually similar images" items={similar} />
+      )}
+
+      {(entities.length > 0 || labels.length > 0) && (
+        <div className="mt-4 rounded-xl border border-white/5 bg-black/10 p-3">
+          <div className="text-xs font-medium text-slate-300">Web context</div>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {labels.map((item, index) => (
+              <span key={"label-" + index} className="rounded-lg bg-cyan-300/10 px-2 py-1 text-xs text-cyan-200">
+                {String((item as Record<string, unknown>).label ?? "")}
+              </span>
+            ))}
+            {entities.map((item, index) => (
+              <span key={"entity-" + index} className="rounded-lg bg-white/5 px-2 py-1 text-xs text-slate-300">
+                {String((item as Record<string, unknown>).description ?? "")}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {status === "NOT_CONFIGURED" && (
+        <div className="mt-3 text-xs text-amber-300">
+          Public-web tracking is not configured yet. Add GOOGLE_CLOUD_VISION_API_KEY on the backend.
+        </div>
+      )}
+
+      {data.note ? (
+        <div className="mt-3 text-[11px] leading-5 text-slate-600">{String(data.note)}</div>
+      ) : null}
+
+      <div className="mt-2 text-[10px] text-slate-700">
+        Source: {provider}
+      </div>
+    </div>
+  );
+}
+
+function WebList({
+  title,
+  items,
+  page = false,
+}: {
+  title: string;
+  items: unknown[];
+  page?: boolean;
+}) {
+  return (
+    <div className="mt-4">
+      <div className="text-xs font-medium text-slate-300">{title}</div>
+      <div className="mt-2 space-y-2">
+        {items.map((item, index) => {
+          const record = (item ?? {}) as Record<string, unknown>;
+          const url = String(record.url ?? "");
+          const titleText = page ? String(record.page_title ?? "") : "";
+          if (!/^https?:\\/\\//i.test(url)) return null;
+
+          return (
+            <a
+              key={url + "-" + index}
+              href={url}
+              target="_blank"
+              rel="noreferrer"
+              className="block rounded-lg border border-white/5 bg-black/10 p-3 hover:bg-white/[.04]"
+            >
+              <div className="break-all text-xs text-cyan-300">{url}</div>
+              {titleText ? (
+                <div className="mt-1 text-xs text-slate-400">{titleText}</div>
+              ) : null}
+              {record.matching_image_url ? (
+                <div className="mt-1 break-all text-[10px] text-slate-600">
+                  Matching image: {String(record.matching_image_url)}
+                </div>
+              ) : null}
+            </a>
+          );
+        })}
       </div>
     </div>
   );
