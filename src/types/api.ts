@@ -65,6 +65,22 @@ export interface ScanResponse {
   threat_id: number;
   scan_id: number;
   incident?: { id: number; severity: Severity; status: string };
+  model_results?: {
+    trained_url_model?: Record<string, unknown>;
+    url_security_engine?: {
+      original_url?: string;
+      final_url?: string;
+      original_domain?: string;
+      final_domain?: string;
+      redirect_analysis?: {
+        redirect_count?: number;
+        redirect_chain?: string[];
+        shortener_detected?: boolean;
+      };
+      [key: string]: unknown;
+    };
+    [key: string]: unknown;
+  };
 }
 export interface PhishingScan {
   id: number;
