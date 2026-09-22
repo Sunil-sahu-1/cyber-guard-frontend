@@ -318,7 +318,11 @@ function VoiceResult({ result }: { result: Result }) {
           value={
             result.confidence === undefined
               ? "Not provided"
-              : Math.round(result.confidence * 100) + "%"
+              : `${Math.round(
+                  result.confidence <= 1
+                    ? result.confidence * 100
+                    : result.confidence,
+                )}%`
           }
         />
       </div>
