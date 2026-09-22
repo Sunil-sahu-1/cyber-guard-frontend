@@ -40,6 +40,7 @@ export default function PhishingEmailPage() {
   const [loading, setLoading] = useState(false);
   const [ocrLoading, setOcrLoading] = useState(false);
   const [screenshot, setScreenshot] = useState<string | null>(null);
+  const [ocrText, setOcrText] = useState("");
 
   async function handleScreenshot(file: File) {
     setErr("");
@@ -51,6 +52,7 @@ export default function PhishingEmailPage() {
       setSender(response.extracted.sender ?? "");
       setSubject(response.extracted.subject ?? "");
       setBody(response.extracted.body ?? "");
+      setOcrText(response.ocr.raw_text ?? "");
       setResult(response.analysis);
       setScreenshot(URL.createObjectURL(file));
     } catch (e) {
@@ -296,7 +298,7 @@ function Result({ result }: { result: ScanResponse }) {
               Screenshot OCR text
             </div>
             <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-xs leading-5 text-slate-400">
-              {String((result as ScanResponse & { ocr?: { raw_text?: string } }).ocr?.raw_text ?? "OCR text is shown after screenshot upload.")}
+              {ocrText || "No OCR text returned."}
             </pre>
           </div>
         </Info>
