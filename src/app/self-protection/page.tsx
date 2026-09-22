@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   Activity,
   Globe2,
@@ -126,7 +126,7 @@ export default function SelfProtectionPage() {
             </Field>
 
             <Button
-              variant="secondary"
+              variant="ghost"
               className="w-full"
               onClick={async () => {
                 await detectDeviceIPs();
@@ -268,7 +268,7 @@ function IPOverview({ result }: { result: SelfProtectionIPLookup }) {
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block text-sm text-slate-400">
       {label}
