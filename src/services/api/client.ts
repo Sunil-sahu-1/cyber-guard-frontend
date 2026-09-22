@@ -160,7 +160,11 @@ export async function apiFetch<T>(
             data !== null &&
             "message" in data
           ? String((data as { message: unknown }).message)
-          : "Request failed";
+          : typeof data === "object" &&
+              data !== null &&
+              "error" in data
+            ? String((data as { error: unknown }).error)
+            : text || `Request failed (HTTP ${res.status})`;
 
     if (
       typeof data === "object" &&
