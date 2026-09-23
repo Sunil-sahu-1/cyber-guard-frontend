@@ -19,9 +19,9 @@ export function PageTitle({
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <div className="mb-1 text-[10px] uppercase tracking-[.22em] text-cyan-400/80">Cyber Guard / Command Center</div>
-        <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl">{title}</h1>
-        {description && <p className="mt-1 max-w-3xl text-sm text-slate-400">{description}</p>}
+        <div className="mb-1 text-[10px] uppercase tracking-[.22em] text-[var(--accent)]">Cyber Guard / Command Center</div>
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--text)] md:text-3xl">{title}</h1>
+        {description && <p className="mt-1 max-w-3xl text-sm text-[var(--muted)]">{description}</p>}
       </div>
       {action}
     </div>
@@ -40,10 +40,10 @@ export function Button({
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const cls =
     variant === "primary"
-      ? "bg-cyan-400/15 text-cyan-200 ring-1 ring-cyan-300/25 hover:bg-cyan-400/25"
+      ? "bg-cyan-500/10 text-[var(--accent)] ring-1 ring-cyan-500/20 hover:bg-cyan-500/15"
       : variant === "danger"
-        ? "bg-red-400/10 text-red-200 ring-1 ring-red-300/20 hover:bg-red-400/20"
-        : "bg-white/5 text-slate-200 ring-1 ring-white/10 hover:bg-white/10";
+        ? "bg-red-500/10 text-red-600 ring-1 ring-red-500/20 hover:bg-red-500/15"
+        : "bg-[var(--panel-soft)] text-[var(--text)] ring-1 ring-[var(--border)] hover:bg-white/10";
   return (
     <button
       {...props}
@@ -62,7 +62,7 @@ export function Button({
 
 export function EmptyState({ text }: { text: string }) {
   return (
-    <div className="rounded-xl border border-dashed border-white/10 p-10 text-center text-sm text-slate-500">
+    <div className="rounded-xl border border-dashed border-[var(--border)] p-10 text-center text-sm text-[var(--muted)]">
       <ShieldAlert className="mx-auto mb-3 h-8 w-8 text-slate-600" />
       {text}
     </div>
@@ -89,7 +89,7 @@ export function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       className={
-        "w-full rounded-xl border border-white/10 bg-black/20 px-3.5 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-cyan-300/40 focus:ring-2 focus:ring-cyan-300/10 " +
+        "w-full rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3.5 py-3 text-sm text-[var(--text)] outline-none placeholder:text-slate-600 focus:border-cyan-300/40 focus:ring-2 focus:ring-cyan-300/10 " +
         (props.className ?? "")
       }
     />
@@ -101,7 +101,7 @@ export function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement
     <textarea
       {...props}
       className={
-        "min-h-36 w-full rounded-xl border border-white/10 bg-black/20 px-3.5 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-cyan-300/40 " +
+        "min-h-36 w-full rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3.5 py-3 text-sm text-[var(--text)] outline-none placeholder:text-slate-600 focus:border-cyan-300/40 " +
         (props.className ?? "")
       }
     />
@@ -113,7 +113,7 @@ export function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
     <select
       {...props}
       className={
-        "w-full rounded-xl border border-white/10 bg-[#091222] px-3.5 py-3 text-sm text-white outline-none focus:border-cyan-300/40 " +
+        "w-full rounded-xl border border-[var(--border)] bg-[var(--panel-solid)] px-3.5 py-3 text-sm text-[var(--text)] outline-none focus:border-cyan-300/40 " +
         (props.className ?? "")
       }
     />
