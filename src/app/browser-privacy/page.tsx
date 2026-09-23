@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import { Cookie, Copy, Download, Eye, Puzzle, RefreshCw, ShieldCheck } from "lucide-react";
 import { ProtectedShell } from "@/components/layout/ProtectedShell";
 import { Button, PageTitle, Panel } from "@/components/ui";
@@ -238,7 +239,7 @@ function Metric({ value, label }: { value: number; label: string }) {
   );
 }
 
-function DataList({ title, items }: { title: string; items: React.ReactNode[] }) {
+function DataList({ title, items }: { title: string; items: ReactNode[] }) {
   return (
     <div>
       <h3 className="mb-3 text-sm font-semibold text-slate-200">{title}</h3>
