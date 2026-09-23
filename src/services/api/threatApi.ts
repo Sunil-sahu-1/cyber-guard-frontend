@@ -125,3 +125,15 @@ export async function listBrowserPrivacyScans() {
     results: BrowserPrivacyScan[];
   }>("/browser-privacy/scans/history/");
 }
+
+
+export async function createBrowserPrivacyAutoToken() {
+  return apiFetch<{
+    message: string;
+    scan_token: string;
+    expires_in_seconds: number;
+  }>("/browser-privacy/auto-token/", {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+}
