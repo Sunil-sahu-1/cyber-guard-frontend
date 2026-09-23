@@ -2,25 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cyber Guard Privacy Scanner</title><link rel="stylesheet" href="styles.css">
+<title>Cyber Guard Browser Privacy Scanner</title><link rel="stylesheet" href="styles.css">
 </head>
 <body><main>
-<header><div class="brand">CYBER GUARD</div><h1>Browser Privacy Scanner</h1><p>Inspect cookie metadata and extension permissions locally.</p></header>
-<section class="notice"><strong>Privacy first</strong><span>Cookie values are never displayed, stored, or sent anywhere. Only cookie metadata is inspected.</span></section>
-<section class="connection">
-  <div class="section-title">Cyber Guard connection</div>
-  <label>Backend API <input id="apiBase" value="http://127.0.0.1:8000/api"></label>
-  <label>Pairing code <input id="pairingCode" maxlength="8" placeholder="8-character code"></label>
-  <div class="actions">
-    <button id="connect">Connect</button>
-    <button id="cookieAccess" class="secondary">Grant cookie access</button>
-  </div>
-  <div class="actions">
-    <button id="scan">Scan &amp; Send</button>
-  </div>
+<header><div class="brand">CYBER GUARD</div><h1>Browser Privacy Scanner</h1><p>Automatic browser privacy monitoring.</p></header>
+<section class="notice"><strong>Automatic mode</strong><span>Keep Cyber Guard Browser Privacy open and the scanner will collect sanitized metadata automatically. Cookie values are never uploaded.</span></section>
+<section class="status-card">
+  <div class="dot"></div>
+  <div><strong id="status">Scanner ready</strong><p id="details">No pairing code is required.</p></div>
 </section>
-<div id="status" class="status">Enter the pairing code from Cyber Guard.</div>
-<section><div class="section-title">Cookie summary</div><div id="cookieSummary" class="cards"></div><div id="cookieList" class="list"></div></section>
-<section><div class="section-title">Installed extensions</div><div id="extensionList" class="list"></div></section>
-<footer>Cookie values are never sent. Only sanitized metadata is uploaded after the extension is paired with Cyber Guard.</footer>
+<section class="actions"><button id="scan">Scan now</button></section>
+<section><div class="section-title">Current browser</div><div id="browserInfo" class="item">Loading...</div></section>
+<footer>Works with Chromium-based browsers and Firefox using the same WebExtension codebase. Safari requires its own signed extension package.</footer>
 </main><script src="popup.js"></script></body></html>
