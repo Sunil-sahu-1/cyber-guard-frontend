@@ -190,7 +190,7 @@ export default function PhishingEmailPage() {
         </Panel>
 
         {result ? (
-          <Result result={result} />
+          <Result result={result} ocrText={ocrText} />
         ) : (
           <Empty text="Submit an email to see phishing, spam, promotional and validation results." />
         )}
@@ -199,7 +199,7 @@ export default function PhishingEmailPage() {
   );
 }
 
-function Result({ result }: { result: ScanResponse }) {
+function Result({ result, ocrText }: { result: ScanResponse; ocrText: string }) {
   const features =
     result.features && typeof result.features === "object"
       ? (result.features as Record<string, unknown>)
