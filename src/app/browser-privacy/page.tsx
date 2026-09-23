@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Cookie, Download, Eye, Puzzle, RefreshCw, ShieldCheck, Radio } from "lucide-react";
 import { ProtectedShell } from "@/components/layout/ProtectedShell";
@@ -18,6 +18,11 @@ export default function BrowserPrivacyPage() {
   const [scannerState, setScannerState] = useState<ScannerState>("detecting");
   const [message, setMessage] = useState("Looking for the Cyber Guard browser scanner...");
   const [lastScan, setLastScan] = useState<string>("");
+  const scannerStateRef = useRef<ScannerState>("detecting");
+
+  useEffect(() => {
+    scannerStateRef.current = scannerState;
+  }, [scannerState]);
 
   const loadScans = useCallback(async () => {
     try {
@@ -100,7 +105,7 @@ export default function BrowserPrivacyPage() {
     void loadScans();
 
     window.setTimeout(() => {
-      if (scannerState === "detecting") {
+      if (scannerStateRef.current === "detecting") {
         setScannerState("offline");
         setMessage("Browser scanner not detected. Install the Cyber Guard companion once to enable automatic scanning.");
       }
@@ -111,7 +116,7 @@ export default function BrowserPrivacyPage() {
       window.clearInterval(statusTimer);
       window.clearInterval(scanTimer);
     };
-  }, [loadScans, requestScan, scannerState]);
+  }, [loadScans, requestScan]);
 
   const latest = scans[0];
 
