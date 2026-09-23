@@ -15,6 +15,8 @@ import {
   ScanFace,
   Shield,
   UserRoundSearch,
+  Cookie,
+  Puzzle,
   TriangleAlert,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,6 +32,7 @@ const items = [
   ["/incidents", "Incidents", AlertTriangle],
   ["/audit-logs", "Audit Logs", BookOpen],
   ["/self-protection", "Self Protection", UserRoundSearch],
+  ["/browser-privacy", "Browser Privacy", Cookie],
 ] as const;
 
 export function Sidebar() {
