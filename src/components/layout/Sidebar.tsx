@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import {
   AlertTriangle,
   BookOpen,
-  FileSearch,
   Link2,
   LayoutDashboard,
   FileWarning,
@@ -16,7 +15,6 @@ import {
   Shield,
   UserRoundSearch,
   Cookie,
-  Puzzle,
   TriangleAlert,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
