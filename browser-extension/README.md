@@ -1,70 +1,84 @@
 # Cyber Guard Browser Privacy Scanner
 
-This Manifest V3 extension is an optional companion for Cyber Guard Browser Privacy.
+The companion scanner is designed to make Browser Privacy automatic after a one-time extension installation.
 
-## What it shows
+## Automatic flow
 
-- Cookie metadata: name, domain, path, Secure, HttpOnly and SameSite flags.
-- Cookie and domain counts.
-- Potentially sensitive cookie names such as session/auth/token names.
-- Installed browser extensions.
-- Enabled/disabled state, IDs and versions.
-- Declared permissions and host permissions.
-- High-impact permission indicators.
+1. Install the companion extension once.
+2. Open Cyber Guard -> Browser Privacy.
+3. The dashboard detects the companion automatically.
+4. The extension collects cookie metadata and installed-extension permissions.
+5. The dashboard uploads only sanitized metadata to the authenticated Cyber Guard backend.
+6. The page refreshes the browser privacy scan automatically while it is open.
 
-## Backend integration
+There is **no pairing code** in automatic mode.
 
-The extension now uses a short-lived pairing flow instead of asking for the user's main Cyber Guard JWT.
+## Browser support
 
-1. Open the Cyber Guard **Browser Privacy** page.
-2. Click **Generate Pairing Code**.
-3. Open the companion extension.
-4. Enter the 8-character pairing code.
-5. Click **Connect**.
-6. Grant cookie access only when you want cookie metadata.
-7. Click **Scan & Send**.
+The implementation uses the cross-browser WebExtensions model and includes both MV3 service-worker and background-script declarations so the same codebase can run across:
 
-The backend exchanges the one-time pairing code for a short-lived browser scanner token. The token is kept in Chrome extension session storage and is separate from the user's normal access/refresh tokens.
+- Chrome
+- Microsoft Edge
+- Brave
+- Opera
+- Firefox
 
-Default local backend:
+Safari uses a different signed extension distribution flow and should receive a separate Safari package before being offered as a production install.
 
-`http://127.0.0.1:8000/api`
+Modern browsers intentionally control extension installation and permission approval. A normal website cannot silently install a browser extension or bypass those browser security prompts.
 
-If the backend is deployed elsewhere, change **Backend API** in the extension and add that backend origin to the extension's `host_permissions`.
+## What is collected
 
-## What is stored in Cyber Guard
+Cookie metadata only:
 
-Only sanitized metadata is sent:
+- cookie name
+- domain
+- path
+- Secure
+- HttpOnly
+- SameSite
+- host-only
+- session flag
 
-- Cookie name, domain, path, Secure, HttpOnly, SameSite, host-only and session flags.
-- Extension name, version, ID, enabled state, declared permissions and host permissions.
-- A summary with counts.
+Installed extension metadata:
 
-Cookie values are explicitly discarded by the extension before upload, and the backend also strips any submitted cookie value field as defense in depth.
+- name
+- version
+- ID
+- enabled/disabled state
+- declared API permissions
+- declared host permissions
+- high-impact permission indicators
 
-The backend stores scan metadata in encrypted database fields and associates each scan with the authenticated Cyber Guard user.
+## What is never collected or uploaded
 
-## What it does not do
+- Cookie values
+- Session tokens
+- Authentication tokens
+- Passwords
+- Cookie contents
 
-- It never displays cookie values.
-- It never stores cookie values.
-- It never sends cookie values to Cyber Guard or any external server.
-- It does not claim that a declared permission proves an extension actually used the data.
-- It does not inspect extension source code or prove runtime behavior.
+The extension strips cookie values before data leaves the browser. The backend also discards any submitted cookie value field as defense in depth.
 
-## Install locally in Chrome
+## Why broad browser permission is required
 
-1. Open `chrome://extensions`.
-2. Enable Developer mode.
-3. Select **Load unpacked**.
-4. Choose this `browser-extension` directory.
-5. Open Cyber Guard Browser Privacy and generate a pairing code.
-6. Enter the code in the extension and connect.
-7. Grant cookie access only when you want the cookie metadata scan.
-8. Click **Scan & Send**.
+The browser cookie API only exposes cookies for domains for which the extension has the required host permission. The extension therefore requests the browser permission needed for a complete privacy inventory. This permission is visible to the user in the browser's extension permissions UI.
 
-The scanner requests all-sites cookie access only after the explicit user action.
+## Runtime behavior limitation
+
+Declared extension permissions tell Cyber Guard what another extension is allowed to access. They do not prove that the extension actually read a specific user's data. Proving runtime behavior requires controlled runtime analysis or source analysis.
+
+## Local development
+
+For the current Cyber Guard development setup, the bridge automatically works with:
+
+- http://127.0.0.1:3000
+- http://localhost:3000
+
+If the Cyber Guard frontend is deployed to another domain, that domain should be added to the extension's content-script match list before publishing the extension.
 
 ## Security model
 
-Authentication/session cookie values are credentials and are never surfaced by this tool. Browser scan tokens are short-lived and separate from the main Cyber Guard JWT. Server-side scan records are encrypted at rest using the project's existing AES-256-GCM encrypted JSON field.
+The companion extension does not need the user's Cyber Guard JWT. Browser metadata is returned to the already authenticated Cyber Guard dashboard through the extension bridge, and the dashboard sends the sanitized payload to the user's authenticated backend endpoint.
+
+The backend stores the scan metadata in encrypted JSON database fields and associates each scan with the logged-in Cyber Guard user.
