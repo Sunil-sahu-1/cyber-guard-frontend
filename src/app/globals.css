@@ -380,3 +380,22 @@ button {
   outline: 2px solid rgba(8, 127, 189, 0.55);
   outline-offset: 2px;
 }
+
+
+/* Dark-mode readability guardrails for legacy muted utility classes. */
+[data-theme="dark"] .text-slate-500 {
+  color: #8da0ba !important;
+}
+
+[data-theme="dark"] .text-slate-600 {
+  color: #7286a2 !important;
+}
+
+[data-theme="dark"] .text-slate-700 {
+  color: #a4b4c8 !important;
+}
+
+[data-theme="dark"] .placeholder\\:text-slate-600::placeholder,
+[data-theme="dark"] .placeholder\\:text-slate-500::placeholder {
+  color: #7186a2 !important;
+}
