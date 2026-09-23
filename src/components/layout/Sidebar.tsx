@@ -70,11 +70,11 @@ export function Sidebar() {
               className={
                 "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition " +
                 (active
-                  ? "bg-cyan-400/10 text-cyan-200 shadow-[inset_3px_0_0_#16c7ff]"
+                  ? "bg-cyan-400/10 text-[var(--accent)] shadow-[inset_3px_0_0_#16c7ff]"
                   : "text-[var(--muted)] hover:bg-[var(--panel-soft)] hover:text-[var(--text)]")
               }
             >
-              <Icon className={"h-4 w-4 " + (active ? "text-[var(--accent)]" : "text-slate-500 group-hover:text-[var(--accent)]")} />
+              <Icon className={"h-4 w-4 " + (active ? "text-[var(--accent)]" : "text-[var(--muted)] group-hover:text-[var(--accent)]")} />
               {label}
             </Link>
           );
@@ -90,7 +90,7 @@ export function Sidebar() {
           <button
             key={label}
             type="button"
-            className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-2 text-slate-500 hover:text-[var(--accent)]"
+            className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-2 text-[var(--muted)] hover:text-[var(--accent)]"
             title={label}
           >
             <Icon className="mx-auto h-4 w-4" />
