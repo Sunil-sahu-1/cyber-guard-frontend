@@ -43,7 +43,7 @@ export function Button({
       ? "bg-cyan-500/10 text-[var(--accent)] ring-1 ring-cyan-500/20 hover:bg-cyan-500/15"
       : variant === "danger"
         ? "bg-red-500/10 text-red-600 ring-1 ring-red-500/20 hover:bg-red-500/15"
-        : "bg-[var(--panel-soft)] text-[var(--text)] ring-1 ring-[var(--border)] hover:bg-white/10";
+        : "bg-[var(--panel-soft)] text-[var(--text)] ring-1 ring-[var(--border)] hover:bg-[var(--panel-soft)]";
   return (
     <button
       {...props}
@@ -73,14 +73,14 @@ export function RiskBadge({ value }: { value: string }) {
   const v = value.toUpperCase();
   const cls =
     v === "CRITICAL"
-      ? "bg-red-400/15 text-red-300 ring-red-300/20"
+      ? "bg-red-400/15 text-red-700 ring-red-500/20"
       : v === "HIGH"
-        ? "bg-orange-400/15 text-orange-300 ring-orange-300/20"
+        ? "bg-orange-400/15 text-orange-700 ring-orange-500/20"
         : v === "MEDIUM"
-          ? "bg-amber-400/15 text-amber-300 ring-amber-300/20"
+          ? "bg-amber-400/15 text-amber-700 ring-amber-500/20"
           : v === "LOW"
-            ? "bg-yellow-400/10 text-yellow-200 ring-yellow-300/15"
-            : "bg-emerald-400/10 text-emerald-300 ring-emerald-300/15";
+            ? "bg-yellow-400/10 text-yellow-800 ring-yellow-500/20"
+            : "bg-emerald-400/10 text-emerald-700 ring-emerald-500/20";
   return <span className={"rounded-full px-2.5 py-1 text-xs font-semibold ring-1 " + cls}>{v}</span>;
 }
 
@@ -89,7 +89,7 @@ export function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       className={
-        "w-full rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3.5 py-3 text-sm text-[var(--text)] outline-none placeholder:text-slate-600 focus:border-cyan-300/40 focus:ring-2 focus:ring-cyan-300/10 " +
+        "w-full rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3.5 py-3 text-sm text-[var(--text)] outline-none placeholder:text-[var(--muted-2)] focus:border-cyan-300/40 focus:ring-2 focus:ring-cyan-300/10 " +
         (props.className ?? "")
       }
     />
@@ -101,7 +101,7 @@ export function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement
     <textarea
       {...props}
       className={
-        "min-h-36 w-full rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3.5 py-3 text-sm text-[var(--text)] outline-none placeholder:text-slate-600 focus:border-cyan-300/40 " +
+        "min-h-36 w-full rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3.5 py-3 text-sm text-[var(--text)] outline-none placeholder:text-[var(--muted-2)] focus:border-cyan-300/40 " +
         (props.className ?? "")
       }
     />
