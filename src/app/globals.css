@@ -4,17 +4,32 @@
 
 :root {
   color-scheme: dark;
+  --page: #020611;
+  --page-2: #071326;
+  --panel: rgba(7, 17, 34, 0.78);
+  --panel-solid: #071326;
+  --panel-soft: rgba(255, 255, 255, 0.035);
+  --border: rgba(115, 178, 255, 0.15);
+  --text: #edf6ff;
+  --muted: #7f91ab;
+  --muted-2: #53657f;
+  --accent: #18bfff;
+  --accent-2: #7467ff;
+  --success: #19e6ae;
 }
-* {
-  box-sizing: border-box;
-}
+
 html,
 body {
   margin: 0;
   min-height: 100%;
-  background: #050814;
-  color: #e8f1ff;
+  background: var(--page);
+  color: var(--text);
 }
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family:
     ui-sans-serif,
@@ -24,47 +39,165 @@ body {
     "Segoe UI",
     sans-serif;
 }
+
 button,
 input,
 textarea,
 select {
   font: inherit;
 }
+
 button {
   cursor: pointer;
 }
-.space-bg {
+
+::selection {
+  background: rgba(24, 191, 255, 0.28);
+}
+
+.app-shell-bg {
   background:
-    radial-gradient(circle at 20% 10%, rgba(66, 153, 225, 0.16), transparent 28%),
-    radial-gradient(circle at 80% 0%, rgba(139, 92, 246, 0.12), transparent 30%),
-    linear-gradient(180deg, #050814 0%, #08111f 55%, #050814 100%);
+    radial-gradient(circle at 15% 15%, rgba(18, 136, 255, 0.12), transparent 25%),
+    radial-gradient(circle at 90% 5%, rgba(118, 92, 255, 0.10), transparent 24%),
+    linear-gradient(180deg, var(--page) 0%, var(--page-2) 55%, var(--page) 100%);
+}
+
+.space-bg {
   position: relative;
   overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(36, 128, 255, 0.12), transparent 32%),
+    radial-gradient(circle at 5% 90%, rgba(0, 211, 255, 0.08), transparent 24%),
+    linear-gradient(180deg, var(--page) 0%, var(--page-2) 55%, var(--page) 100%);
 }
-.space-bg:before {
+
+.space-bg::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(#a9c7ff 1px, transparent 1px);
-  background-size: 38px 38px;
-  opacity: 0.08;
+  background-image: radial-gradient(rgba(155, 202, 255, 0.65) 1px, transparent 1px);
+  background-size: 42px 42px;
+  opacity: 0.055;
 }
+
 .glass {
-  background: rgba(11, 21, 38, 0.72);
-  border: 1px solid rgba(139, 181, 255, 0.13);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 18px 55px rgba(0, 0, 0, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
   backdrop-filter: blur(18px);
 }
+
 .glow {
   box-shadow:
     0 0 0 1px rgba(85, 184, 255, 0.12),
     0 0 42px rgba(46, 163, 255, 0.12);
 }
+
+.neon-line {
+  box-shadow: 0 0 16px rgba(24, 191, 255, 0.45);
+}
+
+.cyber-grid {
+  background-image:
+    linear-gradient(rgba(55, 137, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(55, 137, 255, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.theme-light {
+  --page: #f4f8fc;
+  --page-2: #eaf1f8;
+  --panel: rgba(255, 255, 255, 0.92);
+  --panel-solid: #ffffff;
+  --panel-soft: rgba(15, 23, 42, 0.035);
+  --border: rgba(15, 70, 120, 0.13);
+  --text: #102033;
+  --muted: #607089;
+  --muted-2: #8290a3;
+  --accent: #078bd1;
+  --accent-2: #6558dc;
+}
+
+[data-theme="light"] body {
+  background: var(--page);
+  color: var(--text);
+}
+
+/* Existing pages use Tailwind dark utility colors. These global light-mode
+   mappings keep every existing feature readable without rewriting each page. */
+[data-theme="light"] .bg-\[\#050814\],
+[data-theme="light"] .bg-\[\#060b16\],
+[data-theme="light"] .bg-\[\#091222\] {
+  background-color: #ffffff !important;
+}
+
+[data-theme="light"] .bg-black\/20 {
+  background-color: rgba(15, 23, 42, 0.035) !important;
+}
+
+[data-theme="light"] .bg-white\/5,
+[data-theme="light"] .bg-white\/10,
+[data-theme="light"] .bg-white\/\[\.02\],
+[data-theme="light"] .bg-white\/\[\.025\],
+[data-theme="light"] .bg-white\/\[\.03\],
+[data-theme="light"] .bg-white\/\[\.04\],
+[data-theme="light"] .bg-white\/\[\.05\] {
+  background-color: rgba(15, 23, 42, 0.045) !important;
+}
+
+[data-theme="light"] .border-white\/5,
+[data-theme="light"] .border-white\/10,
+[data-theme="light"] .border-white\/20 {
+  border-color: rgba(15, 70, 120, 0.12) !important;
+}
+
+[data-theme="light"] .text-white {
+  color: #102033 !important;
+}
+
+[data-theme="light"] .text-slate-200 {
+  color: #25364d !important;
+}
+
+[data-theme="light"] .text-slate-300 {
+  color: #33465f !important;
+}
+
+[data-theme="light"] .text-slate-400 {
+  color: #53657b !important;
+}
+
+[data-theme="light"] .text-slate-500 {
+  color: #65758b !important;
+}
+
+[data-theme="light"] .text-slate-600 {
+  color: #8190a3 !important;
+}
+
+[data-theme="light"] .glass {
+  box-shadow:
+    0 12px 35px rgba(31, 65, 95, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .space-bg::before {
+  opacity: 0.035;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #23334f;
+  background: #263b58;
   border-radius: 999px;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #b7c5d5;
 }
