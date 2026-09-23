@@ -137,3 +137,22 @@ export async function createBrowserPrivacyAutoToken() {
     body: JSON.stringify({}),
   });
 }
+
+
+export async function createBrowserPrivacyDashboardScan(payload: {
+  browser: string;
+  browser_version: string;
+  platform: string;
+  cookies: BrowserPrivacyScan["cookies"];
+  extensions: BrowserPrivacyScan["extensions"];
+}) {
+  return apiFetch<{
+    message: string;
+    scan_id: number;
+    scanned_at: string;
+    summary: BrowserPrivacyScan["summary"] & { collection_mode?: string };
+  }>("/browser-privacy/scans/dashboard/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
