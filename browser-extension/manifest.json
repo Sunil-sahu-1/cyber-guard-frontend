@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "Cyber Guard Browser Privacy Scanner",
+  "version": "1.0.0",
+  "description": "Locally inspect browser cookie metadata and installed extension permissions without collecting cookie values.",
+  "permissions": ["cookies", "management"],
+  "optional_host_permissions": ["<all_urls>"],
+  "action": {"default_title": "Cyber Guard Privacy Scanner", "default_popup": "popup.html"}
+}
