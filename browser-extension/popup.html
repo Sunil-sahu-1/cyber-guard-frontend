@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cyber Guard Privacy Scanner</title><link rel="stylesheet" href="styles.css">
+</head>
+<body><main>
+<header><div class="brand">CYBER GUARD</div><h1>Browser Privacy Scanner</h1><p>Inspect cookie metadata and extension permissions locally.</p></header>
+<section class="notice"><strong>Privacy first</strong><span>Cookie values are never displayed, stored, or sent anywhere. Only cookie metadata is inspected.</span></section>
+<section class="actions"><button id="cookieAccess">Grant cookie access</button><button id="scan" class="secondary">Scan browser</button></section>
+<div id="status" class="status">Ready.</div>
+<section><div class="section-title">Cookie summary</div><div id="cookieSummary" class="cards"></div><div id="cookieList" class="list"></div></section>
+<section><div class="section-title">Installed extensions</div><div id="extensionList" class="list"></div></section>
+<footer>Declared permissions show what an extension is allowed to access; they do not prove what its code actually reads.</footer>
+</main><script src="popup.js"></script></body></html>
