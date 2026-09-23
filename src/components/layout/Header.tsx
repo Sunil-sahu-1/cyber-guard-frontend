@@ -24,18 +24,18 @@ export function Header({ onMenu }: { onMenu?: () => void }) {
         <div className="flex h-10 items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3 text-[var(--muted)]">
           <Search className="h-4 w-4 shrink-0" />
           <input
-            className="min-w-0 flex-1 bg-transparent text-sm text-[var(--text)] outline-none placeholder:text-slate-600"
+            className="min-w-0 flex-1 bg-transparent text-sm text-[var(--text)] outline-none placeholder:text-[var(--muted-2)]"
             placeholder="Search threats, users, domains, IPs..."
             aria-label="Global search"
           />
-          <div className="hidden items-center gap-1 text-[10px] text-slate-600 sm:flex">
+          <div className="hidden items-center gap-1 text-[10px] text-[var(--muted-2)] sm:flex">
             <Command className="h-3 w-3" /> K
           </div>
         </div>
       </div>
 
       <div className="ml-auto flex items-center gap-2 lg:gap-4">
-        <div className="hidden items-center gap-2 text-xs text-emerald-300 xl:flex">
+        <div className="hidden items-center gap-2 text-xs text-emerald-700 xl:flex">
           <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.8)]" />
           System Online
         </div>
@@ -43,7 +43,7 @@ export function Header({ onMenu }: { onMenu?: () => void }) {
         <button
           type="button"
           onClick={toggleTheme}
-          className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-2 text-slate-400 hover:text-[var(--text)]"
+          className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-2 text-[var(--muted)] hover:text-[var(--text)]"
           title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
           aria-label="Toggle theme"
         >
@@ -58,7 +58,7 @@ export function Header({ onMenu }: { onMenu?: () => void }) {
           </div>
         </div>
 
-        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-cyan-400/10 text-xs font-semibold text-cyan-200 ring-1 ring-cyan-300/20">
+        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-cyan-400/10 text-xs font-semibold text-[var(--accent)] ring-1 ring-cyan-300/20">
           {initials.toUpperCase()}
         </div>
       </div>
