@@ -1,17 +1,21 @@
 {
   "manifest_version": 3,
   "name": "Cyber Guard Browser Privacy Scanner",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Automatically reports sanitized browser cookie metadata and installed extension permissions to Cyber Guard while never sending cookie values.",
-  "permissions": ["cookies", "management", "storage", "alarms"],
+  "permissions": [
+    "cookies",
+    "management",
+    "storage",
+    "alarms"
+  ],
   "host_permissions": [
     "<all_urls>",
     "http://127.0.0.1:3000/*",
     "http://localhost:3000/*"
   ],
   "background": {
-    "service_worker": "background.js",
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -19,7 +23,9 @@
         "http://127.0.0.1:3000/*",
         "http://localhost:3000/*"
       ],
-      "js": ["bridge.js"],
+      "js": [
+        "bridge.js"
+      ],
       "run_at": "document_idle"
     }
   ],
