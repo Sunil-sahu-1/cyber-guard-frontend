@@ -11,14 +11,14 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="app-shell-bg min-h-screen">
       <div
         className={
-          "fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-sm lg:hidden " +
+          "fixed inset-0 z-40 bg-slate-900/20 backdrop-blur-sm lg:hidden " +
           (open ? "" : "pointer-events-none opacity-0")
         }
         onClick={() => setOpen(false)}
       >
         <div
           className={
-            "h-full w-72 border-r border-white/10 bg-[#060b16] p-3 transition-transform " +
+            "h-full w-72 border-r border-[var(--border)] bg-[var(--panel-solid)] p-3 transition-transform " +
             (open ? "translate-x-0" : "-translate-x-full")
           }
           onClick={(event) => event.stopPropagation()}
