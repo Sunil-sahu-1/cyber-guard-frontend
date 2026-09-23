@@ -11,26 +11,31 @@ type ThemeContextValue = {
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
+const STORAGE_KEY = "cyber-guard-theme";
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  // Cyber Guard now starts in the lighter workspace by default.
+  const [theme, setThemeState] = useState<Theme>("light");
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("cyber-guard-theme") as Theme | null;
-    const preferred = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-    setThemeState(saved === "light" || saved === "dark" ? saved : preferred);
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    const next: Theme = saved === "dark" || saved === "light" ? saved : "light";
+    setThemeState(next);
   }, []);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
-    window.localStorage.setItem("cyber-guard-theme", theme);
+    const root = document.documentElement;
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+    window.localStorage.setItem(STORAGE_KEY, theme);
   }, [theme]);
+
+  const setTheme = (next: Theme) => setThemeState(next);
 
   const value = useMemo(
     () => ({
       theme,
-      setTheme: (next: Theme) => setThemeState(next),
+      setTheme,
       toggleTheme: () => setThemeState((current) => (current === "dark" ? "light" : "dark")),
     }),
     [theme],
