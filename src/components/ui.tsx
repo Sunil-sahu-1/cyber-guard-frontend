@@ -1,9 +1,12 @@
 "use client";
+
 import type { ReactNode } from "react";
 import { Loader2, ShieldAlert } from "lucide-react";
+
 export function Panel({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <section className={"glass rounded-2xl " + className}>{children}</section>;
 }
+
 export function PageTitle({
   title,
   description,
@@ -14,15 +17,17 @@ export function PageTitle({
   action?: ReactNode;
 }) {
   return (
-    <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight text-white">{title}</h1>
-        {description && <p className="mt-1 max-w-2xl text-sm text-slate-400">{description}</p>}
+        <div className="mb-1 text-[10px] uppercase tracking-[.22em] text-cyan-400/80">Cyber Guard / Command Center</div>
+        <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl">{title}</h1>
+        {description && <p className="mt-1 max-w-3xl text-sm text-slate-400">{description}</p>}
       </div>
       {action}
     </div>
   );
 }
+
 export function Button({
   children,
   loading = false,
@@ -54,6 +59,7 @@ export function Button({
     </button>
   );
 }
+
 export function EmptyState({ text }: { text: string }) {
   return (
     <div className="rounded-xl border border-dashed border-white/10 p-10 text-center text-sm text-slate-500">
@@ -62,6 +68,7 @@ export function EmptyState({ text }: { text: string }) {
     </div>
   );
 }
+
 export function RiskBadge({ value }: { value: string }) {
   const v = value.toUpperCase();
   const cls =
@@ -74,10 +81,9 @@ export function RiskBadge({ value }: { value: string }) {
           : v === "LOW"
             ? "bg-yellow-400/10 text-yellow-200 ring-yellow-300/15"
             : "bg-emerald-400/10 text-emerald-300 ring-emerald-300/15";
-  return (
-    <span className={"rounded-full px-2.5 py-1 text-xs font-semibold ring-1 " + cls}>{v}</span>
-  );
+  return <span className={"rounded-full px-2.5 py-1 text-xs font-semibold ring-1 " + cls}>{v}</span>;
 }
+
 export function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
@@ -89,6 +95,7 @@ export function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
     />
   );
 }
+
 export function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
@@ -100,6 +107,7 @@ export function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement
     />
   );
 }
+
 export function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
