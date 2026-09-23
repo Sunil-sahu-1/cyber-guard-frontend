@@ -214,7 +214,7 @@ export default function Dashboard() {
 
 function ThreatGalaxy({ stats }: { stats: Record<string, number> }) {
   return (
-    <div className="relative mt-2 min-h-[470px] overflow-hidden rounded-2xl border border-cyan-300/10 bg-[#020714] cyber-grid">
+    <div className="relative mt-2 min-h-[470px] overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--panel-solid)] cyber-grid cg-glow">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(18,160,255,.16),transparent_26%)]" />
       <div className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-300/10" />
       <div className="absolute left-1/2 top-1/2 h-52 w-52 -translate-x-1/2 -translate-y-1/2 rounded-full border border-violet-300/10" />
@@ -246,7 +246,7 @@ function ThreatGalaxy({ stats }: { stats: Record<string, number> }) {
         })}
       </svg>
 
-      <div className="absolute left-1/2 top-1/2 z-20 grid h-28 w-28 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-cyan-300/50 bg-[#04101f] text-center shadow-[0_0_55px_rgba(0,191,255,.25)]">
+      <div className="absolute left-1/2 top-1/2 z-20 grid h-28 w-28 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-cyan-300/50 bg-[var(--panel-solid)] text-center cg-pulse shadow-[0_12px_55px_rgba(8,127,189,.18)]">
         <div>
           <BrainCircuit className="mx-auto h-7 w-7 text-cyan-300" />
           <div className="mt-1 text-xs font-bold text-cyan-100">AI CORE</div>
@@ -303,7 +303,7 @@ function LiveAttackStream({ threats }: { threats: Threat[] }) {
       </div>
       <div className="mt-3 space-y-2">
         {rows.length ? rows.map((t, index) => (
-          <div key={t.id} className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/[.02] px-3 py-2.5">
+          <div key={t.id} className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3 py-2.5">
             <span className={"h-2.5 w-2.5 rounded-full " + (t.severity === "CRITICAL" ? "bg-red-400" : t.severity === "HIGH" ? "bg-orange-400" : "bg-amber-300")} />
             <div className="min-w-0 flex-1">
               <div className="truncate text-xs font-medium text-slate-200">{t.threat_type.replaceAll("_", " ")}</div>
@@ -327,7 +327,7 @@ function RecentIncidents({ incidents }: { incidents: Incident[] }) {
       </div>
       <div className="mt-3 space-y-2">
         {incidents.slice(0, 5).map((incident) => (
-          <div key={incident.id} className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/[.02] p-3">
+          <div key={incident.id} className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-3">
             <span className={"h-2.5 w-2.5 rounded-full " + (incident.severity === "CRITICAL" ? "bg-red-400" : incident.severity === "HIGH" ? "bg-orange-400" : "bg-amber-300")} />
             <div className="min-w-0 flex-1">
               <div className="truncate text-xs font-medium text-slate-200">{incident.incident_type?.replaceAll("_", " ") || "Security Incident"}</div>
@@ -379,7 +379,7 @@ function ThreatCategories({ threats }: { threats: Threat[] }) {
 
 function MiniMetric({ label, value, suffix = "" }: { label: string; value: number; suffix?: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[.02] p-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--panel-soft)] p-3">
       <div className="text-[10px] uppercase tracking-wider text-slate-600">{label}</div>
       <div className="mt-1 text-xl font-bold text-slate-200">{value}{suffix}</div>
     </div>
