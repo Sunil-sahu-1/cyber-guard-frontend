@@ -62,3 +62,66 @@ export async function lookupSelfProtectionIPv4(ipv4: string) {
     body: JSON.stringify({ ipv4 }),
   });
 }
+
+
+export interface BrowserPrivacyScan {
+  id: number;
+  browser: string;
+  browser_version: string;
+  platform: string;
+  cookie_count: number;
+  sensitive_cookie_count: number;
+  extension_count: number;
+  high_impact_extension_count: number;
+  cookies: Array<{
+    name: string;
+    domain: string;
+    path: string;
+    secure: boolean;
+    http_only: boolean;
+    same_site: string;
+    host_only?: boolean;
+    session?: boolean;
+  }>;
+  extensions: Array<{
+    id: string;
+    name: string;
+    version: string;
+    enabled: boolean;
+    type: string;
+    permissions: string[];
+    host_permissions: string[];
+    high_impact_permissions: string[];
+  }>;
+  summary: {
+    cookie_count: number;
+    sensitive_cookie_count: number;
+    cookie_domains: number;
+    extension_count: number;
+    enabled_extension_count: number;
+    high_impact_extension_count: number;
+    metadata_only: boolean;
+    cookie_values_received: boolean;
+    declared_permissions_are_not_runtime_proof: boolean;
+  };
+  scanned_at: string;
+}
+
+export async function createBrowserPrivacyPairing() {
+  return apiFetch<{
+    message: string;
+    pairing_code: string;
+    expires_at: string;
+    expires_in_seconds: number;
+  }>("/browser-privacy/pair/", {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+}
+
+export async function listBrowserPrivacyScans() {
+  return apiFetch<{
+    count: number;
+    results: BrowserPrivacyScan[];
+  }>("/browser-privacy/scans/history/");
+}
