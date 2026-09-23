@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Menu, Moon, Search, Sun, Command } from "lucide-react";
+import { Menu, Moon, Search, Sun, Command } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/components/theme/ThemeProvider";
 
@@ -50,12 +50,6 @@ export function Header({ onMenu }: { onMenu?: () => void }) {
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
 
-        <button className="relative rounded-xl p-2 text-[var(--muted)] hover:bg-[var(--panel-soft)]" aria-label="Notifications">
-          <Bell className="h-5 w-5" />
-          <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-[var(--text)]">
-            3
-          </span>
-        </button>
 
         <div className="hidden text-right lg:block">
           <div className="text-sm font-medium text-[var(--text)]">{name || "Operator"}</div>
