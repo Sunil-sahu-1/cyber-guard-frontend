@@ -43,12 +43,12 @@ export default function PhishingUrlPage() {
             </div>
             <div>
               <h2 className="font-semibold">URL analysis</h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[var(--muted)]">
                 Check a website link for phishing indicators.
               </p>
             </div>
           </div>
-          <label className="block text-sm text-slate-400">
+          <label className="block text-sm text-[var(--muted)]">
             Suspicious URL
             <Input
               value={url}
@@ -82,7 +82,7 @@ function Result({ result }: { result: ScanResponse }) {
     <Panel className="p-6">
       <div className="flex items-start justify-between">
         <div>
-          <div className="text-xs uppercase tracking-[.18em] text-slate-600">Classification</div>
+          <div className="text-xs uppercase tracking-[.18em] text-[var(--muted)]">Classification</div>
           <div className="mt-2 text-2xl font-semibold">{result.prediction}</div>
         </div>
         <RiskBadge value={result.severity} />
@@ -92,7 +92,7 @@ function Result({ result }: { result: ScanResponse }) {
         <Metric label="Confidence" value={result.confidence + "%"} />
       </div>
       <Info title="Explanation">
-        <p className="text-sm leading-6 text-slate-400">{result.explanation}</p>
+        <p className="text-sm leading-6 text-[var(--muted)]">{result.explanation}</p>
       </Info>
       <RedirectDestination result={result} />
       <UrlIntelligence result={result} />
@@ -108,14 +108,14 @@ function Result({ result }: { result: ScanResponse }) {
               </span>
             ))
           ) : (
-            <span className="text-sm text-slate-600">No indicators returned.</span>
+            <span className="text-sm text-[var(--muted)]">No indicators returned.</span>
           )}
         </div>
       </Info>
       <Info title="Recommended actions">
         <div className="space-y-2">
           {result.recommended_actions?.map((x, i) => (
-            <div key={i} className="rounded-xl bg-white/[.03] px-3 py-2 text-sm text-slate-400">
+            <div key={i} className="rounded-xl bg-[var(--panel-soft)] px-3 py-2 text-sm text-[var(--muted)]">
               {x}
             </div>
           ))}
@@ -138,13 +138,13 @@ function RedirectDestination({ result }: { result: ScanResponse }) {
     <Info title="Final Destination">
       <div className="space-y-3">
         <div>
-          <div className="text-xs text-slate-600">Original URL</div>
-          <div className="mt-1 break-all rounded-lg bg-white/[.03] px-3 py-2 text-sm text-slate-300">
+          <div className="text-xs text-[var(--muted)]">Original URL</div>
+          <div className="mt-1 break-all rounded-lg bg-[var(--panel-soft)] px-3 py-2 text-sm text-slate-300">
             {originalUrl}
           </div>
         </div>
         <div>
-          <div className="text-xs text-slate-600">Final Destination URL</div>
+          <div className="text-xs text-[var(--muted)]">Final Destination URL</div>
           <a
             href={finalUrl}
             target="_blank"
@@ -155,17 +155,17 @@ function RedirectDestination({ result }: { result: ScanResponse }) {
           </a>
         </div>
         {typeof redirectCount === "number" && (
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-[var(--muted)]">
             Redirects detected: <span className="text-slate-300">{redirectCount}</span>
           </div>
         )}
         {redirectChain.length > 1 && (
           <div>
-            <div className="text-xs text-slate-600">Complete Redirect Chain</div>
+            <div className="text-xs text-[var(--muted)]">Complete Redirect Chain</div>
             <div className="mt-2 space-y-2">
               {redirectChain.map((link, index) => (
-                <div key={`${link}-${index}`} className="flex items-start gap-2 rounded-lg bg-white/[.03] px-3 py-2 text-sm">
-                  <span className="shrink-0 text-xs text-slate-600">{index + 1}.</span>
+                <div key={`${link}-${index}`} className="flex items-start gap-2 rounded-lg bg-[var(--panel-soft)] px-3 py-2 text-sm">
+                  <span className="shrink-0 text-xs text-[var(--muted)]">{index + 1}.</span>
                   <a
                     href={link}
                     target="_blank"
@@ -209,8 +209,8 @@ function UrlIntelligence({ result }: { result: ScanResponse }) {
     <Info title="URL Intelligence">
       <div className="grid gap-3 sm:grid-cols-2">
         {rows.map(([label, value]) => (
-          <div key={label} className="rounded-lg bg-white/[.03] px-3 py-2">
-            <div className="text-xs text-slate-600">{label}</div>
+          <div key={label} className="rounded-lg bg-[var(--panel-soft)] px-3 py-2">
+            <div className="text-xs text-[var(--muted)]">{label}</div>
             <div className="mt-1 break-all text-sm text-slate-300">{value}</div>
           </div>
         ))}
@@ -220,7 +220,7 @@ function UrlIntelligence({ result }: { result: ScanResponse }) {
 }
 function Info({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="mt-5 rounded-xl border border-white/10 p-4">
+    <div className="mt-5 rounded-xl border border-[var(--border)] p-4">
       <div className="mb-2 text-sm font-medium">{title}</div>
       {children}
     </div>
@@ -228,8 +228,8 @@ function Info({ title, children }: { title: string; children: React.ReactNode })
 }
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[.025] p-4">
-      <div className="text-xs text-slate-600">{label}</div>
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
+      <div className="text-xs text-[var(--muted)]">{label}</div>
       <div className="mt-1 text-lg font-semibold">{value}</div>
     </div>
   );
@@ -240,7 +240,7 @@ function Empty({ text }: { text: string }) {
       <div className="text-center">
         <ScanSearch className="mx-auto h-12 w-12 text-cyan-300/50" />
         <h2 className="mt-4 font-semibold">Awaiting an analysis</h2>
-        <p className="mt-1 text-sm text-slate-600">{text}</p>
+        <p className="mt-1 text-sm text-[var(--muted)]">{text}</p>
       </div>
     </Panel>
   );
