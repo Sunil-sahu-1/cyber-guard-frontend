@@ -120,13 +120,13 @@ export default function AnomalyPage() {
       <PageTitle
         title="Anomaly Center"
         description="Analyze login and behavioral anomalies, record activity, and inspect backend-generated history."
-        action={<Activity className="h-5 w-5 text-cyan-300" />}
+        action={<Activity className="h-5 w-5 text-[var(--accent)]" />}
       />
 
       <div className="grid gap-5 xl:grid-cols-3">
         <Panel className="p-5">
           <h2 className="font-semibold">Login anomaly</h2>
-          <p className="mt-1 text-xs text-slate-500">Enter the login signals you want the backend to analyze.</p>
+          <p className="mt-1 text-xs text-[var(--muted)]">Enter the login signals you want the backend to analyze.</p>
 
           <div className="mt-4 space-y-3">
             <Field label="Failed attempts">
@@ -169,7 +169,7 @@ export default function AnomalyPage() {
 
         <Panel className="p-5">
           <h2 className="font-semibold">Behavior anomaly</h2>
-          <p className="mt-1 text-xs text-slate-500">Select the behavioral signals detected for this activity.</p>
+          <p className="mt-1 text-xs text-[var(--muted)]">Select the behavioral signals detected for this activity.</p>
 
           <div className="mt-4 space-y-3">
             <Toggle label="Unusual access" checked={behavior.unusual_access} onChange={v => setBehavior({ ...behavior, unusual_access: v })} />
@@ -211,7 +211,7 @@ export default function AnomalyPage() {
 
         <Panel className="p-5">
           <h2 className="font-semibold">Record login activity</h2>
-          <p className="mt-1 text-xs text-slate-500">Save a login event to the user's activity history.</p>
+          <p className="mt-1 text-xs text-[var(--muted)]">Save a login event to the user's activity history.</p>
 
           <div className="mt-4 space-y-3">
             <Field label="Status">
@@ -253,7 +253,7 @@ export default function AnomalyPage() {
       {result && (
         <Panel className="mt-5 p-5">
           <div className="flex items-center gap-2">
-            <ShieldAlert className="h-4 w-4 text-cyan-300" />
+            <ShieldAlert className="h-4 w-4 text-[var(--accent)]" />
             <h2 className="font-semibold">Latest analysis</h2>
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
@@ -265,7 +265,7 @@ export default function AnomalyPage() {
       <Panel className="mt-5 p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <History className="h-4 w-4 text-cyan-300" />
+            <History className="h-4 w-4 text-[var(--accent)]" />
             <h2 className="font-semibold">Anomaly history</h2>
           </div>
           <Button variant="ghost" onClick={loadHistory}>
@@ -274,15 +274,15 @@ export default function AnomalyPage() {
         </div>
         <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {history.map((item, i) => (
-            <div key={String(item.id ?? i)} className="rounded-xl border border-white/10 bg-white/[.02] p-4">
+            <div key={String(item.id ?? i)} className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs text-slate-500">#{String(item.id ?? "-")}</span>
+                <span className="text-xs text-[var(--muted)]">#{String(item.id ?? "-")}</span>
                 {item.severity ? <RiskBadge value={String(item.severity)} /> : null}
               </div>
               <div className="mt-2 text-sm font-medium">
                 {String(item.anomaly_type ?? item.activity_type ?? item.status ?? "Activity")}
               </div>
-              <div className="mt-1 text-xs text-slate-500">
+              <div className="mt-1 text-xs text-[var(--muted)]">
                 {String(item.explanation ?? item.location ?? item.created_at ?? "")}
               </div>
             </div>
@@ -293,12 +293,12 @@ export default function AnomalyPage() {
   );
 }
 
-const inputClass = "w-full rounded-xl border border-white/10 bg-white/[.04] px-3 py-2.5 text-sm text-slate-200 outline-none transition placeholder:text-slate-500 focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/30";
+const inputClass = "w-full rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3 py-2.5 text-sm text-slate-200 outline-none transition placeholder:text-[var(--muted)] focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/30";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-medium text-slate-400">{label}</span>
+      <span className="mb-1.5 block text-xs font-medium text-[var(--muted)]">{label}</span>
       {children}
     </label>
   );
@@ -306,8 +306,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (value: boolean) => void }) {
   return (
-    <label className="flex cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-white/[.03] px-3 py-2.5">
-      <span className="text-sm text-slate-300">{label}</span>
+    <label className="flex cursor-pointer items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3 py-2.5">
+      <span className="text-sm text-[var(--muted)]">{label}</span>
       <input type="checkbox" checked={checked} onChange={e => onChange(e.target.checked)} className="h-4 w-4 accent-cyan-400" />
     </label>
   );
@@ -319,8 +319,8 @@ function ResponseSummary({ data }: { data: JsonObject }) {
       {Object.entries(data).map(([key, value]) => {
         if (value === null || value === undefined || value === "") return null;
         return (
-          <div key={key} className="rounded-xl border border-white/10 bg-white/[.02] p-4">
-            <div className="text-[11px] font-medium uppercase tracking-wider text-slate-500">{formatLabel(key)}</div>
+          <div key={key} className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
+            <div className="text-[11px] font-medium uppercase tracking-wider text-[var(--muted)]">{formatLabel(key)}</div>
             <div className="mt-2 text-sm text-slate-200"><DisplayValue value={value} /></div>
           </div>
         );
@@ -330,12 +330,12 @@ function ResponseSummary({ data }: { data: JsonObject }) {
 }
 
 function DisplayValue({ value }: { value: unknown }) {
-  if (value === null || value === undefined) return <span className="text-slate-500">—</span>;
+  if (value === null || value === undefined) return <span className="text-[var(--muted)]">—</span>;
   if (typeof value === "boolean") return <span className={value ? "text-amber-300" : "text-emerald-300"}>{value ? "Yes" : "No"}</span>;
-  if (typeof value === "number") return <span className="font-semibold text-cyan-200">{value}</span>;
+  if (typeof value === "number") return <span className="font-semibold text-[var(--accent)]">{value}</span>;
   if (typeof value === "string") return <span className="break-words">{value || "—"}</span>;
-  if (Array.isArray(value)) return value.length ? <div className="space-y-2">{value.map((item, index) => <div key={index} className="rounded-lg border border-white/10 bg-black/10 p-2"><DisplayValue value={item} /></div>)}</div> : <span className="text-slate-500">None</span>;
-  if (typeof value === "object") return <div className="mt-1 space-y-2">{Object.entries(value as Record<string, unknown>).map(([key, item]) => <div key={key} className="flex items-start justify-between gap-4 border-b border-white/5 pb-2 last:border-0 last:pb-0"><span className="shrink-0 text-xs text-slate-500">{formatLabel(key)}</span><span className="text-right"><DisplayValue value={item} /></span></div>)}</div>;
+  if (Array.isArray(value)) return value.length ? <div className="space-y-2">{value.map((item, index) => <div key={index} className="rounded-lg border border-[var(--border)] bg-black/10 p-2"><DisplayValue value={item} /></div>)}</div> : <span className="text-[var(--muted)]">None</span>;
+  if (typeof value === "object") return <div className="mt-1 space-y-2">{Object.entries(value as Record<string, unknown>).map(([key, item]) => <div key={key} className="flex items-start justify-between gap-4 border-b border-[var(--border)] pb-2 last:border-0 last:pb-0"><span className="shrink-0 text-xs text-[var(--muted)]">{formatLabel(key)}</span><span className="text-right"><DisplayValue value={item} /></span></div>)}</div>;
   return <span>{String(value)}</span>;
 }
 
