@@ -295,7 +295,7 @@ export default function MediaGuard() {
                     : "Media analysis ready"}
               </h2>
 
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-[var(--muted)]">
                 Upload a{" "}
                 {kind === "image" ? "photo" : "video"}{" "}
                 to see the analysis results.
@@ -331,17 +331,17 @@ function ModeButton({
         "rounded-2xl border p-5 text-left transition " +
         (active
           ? "border-cyan-300/40 bg-cyan-300/10"
-          : "border-white/10 bg-white/[.02] hover:bg-white/[.05]")
+          : "border-[var(--border)] bg-white/[.02] hover:bg-white/[.05]")
       }
     >
       <div className="flex items-center gap-3">
-        <div className="grid h-11 w-11 place-items-center rounded-xl bg-white/[.04]">
+        <div className="grid h-11 w-11 place-items-center rounded-xl bg-[var(--panel-soft)]">
           {icon}
         </div>
         <div>
           <div className="font-semibold">{title}</div>
-          <div className="text-xs text-slate-500">{description}</div>
-          <div className="mt-1 text-[11px] text-slate-600">{formats}</div>
+          <div className="text-xs text-[var(--muted)]">{description}</div>
+          <div className="mt-1 text-[11px] text-[var(--muted)]">{formats}</div>
         </div>
       </div>
     </button>
@@ -373,7 +373,7 @@ function ImageUploader({
         </div>
         <div>
           <h2 className="font-semibold">Photo Deepfake Analysis</h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-[var(--muted)]">
             Check facial and visual manipulation indicators.
           </p>
         </div>
@@ -404,7 +404,7 @@ function ImageUploader({
         <div className="mt-4 text-sm font-medium">
           {file ? file.name : "Choose a photo"}
         </div>
-        <div className="mt-1 text-xs text-slate-600">
+        <div className="mt-1 text-xs text-[var(--muted)]">
           JPG, JPEG, PNG or WEBP • Maximum 20 MB
         </div>
       </div>
@@ -434,11 +434,11 @@ function ImageUploader({
                 "rounded-xl border p-3 text-left transition " +
                 (active
                   ? "border-cyan-300/40 bg-cyan-300/10"
-                  : "border-white/10 bg-white/[.02] hover:bg-white/[.05]")
+                  : "border-[var(--border)] bg-white/[.02] hover:bg-white/[.05]")
               }
             >
               <div className="text-xs font-medium text-slate-300">{title}</div>
-              <div className="mt-1 text-xs leading-5 text-slate-600">
+              <div className="mt-1 text-xs leading-5 text-[var(--muted)]">
                 {text}
               </div>
               <div className="mt-2 text-[10px] uppercase tracking-wider text-cyan-300/70">
@@ -471,7 +471,7 @@ function VideoUploader({
         </div>
         <div>
           <h2 className="font-semibold">Video Deepfake Analysis</h2>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-[var(--muted)]">
             Upload a video for frame and temporal manipulation analysis.
           </p>
         </div>
@@ -493,10 +493,10 @@ function VideoUploader({
         <div className="mt-4 text-sm font-medium">
           {file ? file.name : "Choose a video"}
         </div>
-        <div className="mt-2 text-xs text-slate-500">
+        <div className="mt-2 text-xs text-[var(--muted)]">
           MP4 • MOV • AVI • MKV • WEBM
         </div>
-        <div className="mt-1 text-xs text-slate-600">
+        <div className="mt-1 text-xs text-[var(--muted)]">
           Maximum 20 MB
         </div>
       </div>
@@ -520,7 +520,7 @@ function VideoUploader({
             className="rounded-xl border border-violet-300/10 bg-violet-300/[.03] p-3"
           >
             <div className="text-xs font-medium text-slate-300">{title}</div>
-            <div className="mt-1 text-xs leading-5 text-slate-600">
+            <div className="mt-1 text-xs leading-5 text-[var(--muted)]">
               {text}
             </div>
           </div>
@@ -534,7 +534,7 @@ function VideoUploader({
             <div className="text-sm font-medium text-slate-300">
               Basic video screening
             </div>
-            <p className="mt-1 text-xs leading-5 text-slate-500">
+            <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
               Current analysis uses OpenCV frame sampling, face detection and
               visual heuristics. A trained video deepfake model can be added later.
             </p>
@@ -555,21 +555,21 @@ function FileInfo({
   onClear: () => void;
 }) {
   return (
-    <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-white/[.03] p-3">
+    <div className="mt-4 flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-3">
       <div className="flex min-w-0 items-center gap-3">
-        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/[.04]">
+        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[var(--panel-soft)]">
           {icon}
         </div>
         <div className="min-w-0">
           <div className="truncate text-sm text-slate-300">{file.name}</div>
-          <div className="text-xs text-slate-600">{formatBytes(file.size)}</div>
+          <div className="text-xs text-[var(--muted)]">{formatBytes(file.size)}</div>
         </div>
       </div>
 
       <button
         type="button"
         onClick={onClear}
-        className="ml-3 rounded-lg p-2 text-slate-500 hover:bg-white/5 hover:text-white"
+        className="ml-3 rounded-lg p-2 text-[var(--muted)] hover:bg-white/5 hover:text-white"
         aria-label="Remove selected file"
       >
         <X className="h-4 w-4" />
@@ -623,7 +623,7 @@ function Result({
     <Panel className="p-6">
       <div className="flex items-start justify-between">
         <div>
-          <div className="text-xs uppercase tracking-[.18em] text-slate-600">
+          <div className="text-xs uppercase tracking-[.18em] text-[var(--muted)]">
             {kind === "image" ? "Photo result" : "Video result"}
           </div>
           <div className="mt-2 text-2xl font-semibold">
@@ -633,9 +633,9 @@ function Result({
         <RiskBadge value={result.result ?? result.severity ?? "UNKNOWN"} />
       </div>
 
-      <div className="mt-5 rounded-xl border border-white/10 bg-white/[.02] p-4">
+      <div className="mt-5 rounded-xl border border-[var(--border)] bg-white/[.02] p-4">
         <div className="text-sm font-medium">Analysis explanation</div>
-        <p className="mt-2 text-sm leading-6 text-slate-400">
+        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
           {result.explanation ??
             result.recommendation ??
             "Analysis completed."}
@@ -649,8 +649,8 @@ function Result({
           ["Model score", features.ensemble_score ?? result.risk_score],
           ["Trained model", features.fine_tuned_models],
         ].map(([label, value]) => (
-          <div key={String(label)} className="rounded-xl border border-white/10 p-3">
-            <div className="text-xs uppercase tracking-[.12em] text-slate-600">
+          <div key={String(label)} className="rounded-xl border border-[var(--border)] p-3">
+            <div className="text-xs uppercase tracking-[.12em] text-[var(--muted)]">
               {label}
             </div>
             <div className="mt-1 whitespace-pre-wrap text-sm text-slate-300">
@@ -663,7 +663,7 @@ function Result({
       <div className="mt-6 flex items-center justify-between">
         <div>
           <div className="text-sm font-medium">Evidence details</div>
-          <div className="mt-1 text-xs text-slate-600">
+          <div className="mt-1 text-xs text-[var(--muted)]">
             {selectedEvidence
               ? `Showing ${sectionLabels[selectedEvidence]} only.`
               : "All evidence sections are shown."}
@@ -687,7 +687,7 @@ function Result({
           return (
             <div
               key={section}
-              className="rounded-xl border border-white/10 bg-white/[.02] p-4"
+              className="rounded-xl border border-[var(--border)] bg-white/[.02] p-4"
             >
               <div className="text-sm font-medium text-slate-200">
                 {sectionLabels[section]}
@@ -695,8 +695,8 @@ function Result({
               {entries.length ? (
                 <div className="mt-3 grid gap-2 sm:grid-cols-2">
                   {entries.map(([key, value]) => (
-                    <div key={key} className="rounded-lg border border-white/5 bg-black/10 p-3">
-                      <div className="text-xs capitalize text-slate-600">
+                    <div key={key} className="rounded-lg border border-[var(--border)] bg-black/10 p-3">
+                      <div className="text-xs capitalize text-[var(--muted)]">
                         {humanize(key)}
                       </div>
                       <pre className="mt-1 whitespace-pre-wrap break-words text-xs leading-5 text-slate-300">
@@ -706,7 +706,7 @@ function Result({
                   ))}
                 </div>
               ) : (
-                <div className="mt-3 text-xs text-slate-500">
+                <div className="mt-3 text-xs text-[var(--muted)]">
                   No {sectionLabels[section].toLowerCase()} data was returned.
                 </div>
               )}
@@ -741,35 +741,35 @@ function PublicWebPresence({ data }: { data: Record<string, unknown> }) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="text-sm font-medium">Public Web Presence</div>
-          <p className="mt-1 text-xs leading-5 text-slate-500">
+          <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
             Cyber Guard fingerprint + indexed public-web image evidence.
           </p>
         </div>
-        <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-wider text-cyan-300">
+        <span className="rounded-full border border-[var(--border)] px-2 py-1 text-[10px] uppercase tracking-wider text-cyan-300">
           {humanize(status)}
         </span>
       </div>
 
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
-        <div className="rounded-lg border border-white/5 bg-black/10 p-3">
-          <div className="text-[10px] uppercase tracking-wider text-slate-600">SHA-256</div>
+        <div className="rounded-lg border border-[var(--border)] bg-black/10 p-3">
+          <div className="text-[10px] uppercase tracking-wider text-[var(--muted)]">SHA-256</div>
           <div className="mt-1 break-all text-xs text-slate-300">{String(fingerprint.sha256 ?? "Not available")}</div>
         </div>
-        <div className="rounded-lg border border-white/5 bg-black/10 p-3">
-          <div className="text-[10px] uppercase tracking-wider text-slate-600">Perceptual hash</div>
+        <div className="rounded-lg border border-[var(--border)] bg-black/10 p-3">
+          <div className="text-[10px] uppercase tracking-wider text-[var(--muted)]">Perceptual hash</div>
           <div className="mt-1 break-all text-xs text-slate-300">{String(fingerprint.average_hash ?? "Not available")}</div>
         </div>
       </div>
 
       {status === "NOT_CONFIGURED" ? (
-        <div className="mt-3 rounded-lg border border-amber-300/10 bg-amber-300/[.04] p-3 text-xs leading-5 text-slate-500">
+        <div className="mt-3 rounded-lg border border-amber-300/10 bg-amber-300/[.04] p-3 text-xs leading-5 text-[var(--muted)]">
           {String(data.message ?? `Configure the public-web search provider to discover indexed pages.`)}
         </div>
       ) : null}
 
       {matches.length > 0 ? (
         <div className="mt-4">
-          <div className="mb-2 text-xs uppercase tracking-wider text-slate-600">
+          <div className="mb-2 text-xs uppercase tracking-wider text-[var(--muted)]">
             Public pages / images found: {matches.length}
           </div>
           <div className="grid gap-2">
@@ -778,7 +778,7 @@ function PublicWebPresence({ data }: { data: Record<string, unknown> }) {
               const pageUrl = String(match.page_url ?? "");
               const imageUrl = String(match.image_url ?? "");
               return (
-                <div key={`${pageUrl}-${imageUrl}-${index}`} className="rounded-lg border border-white/5 bg-black/10 p-3">
+                <div key={`${pageUrl}-${imageUrl}-${index}`} className="rounded-lg border border-[var(--border)] bg-black/10 p-3">
                   <div className="text-xs font-medium text-slate-300">
                     {String(match.title ?? `Web match ${index + 1}`)}
                   </div>
@@ -789,7 +789,7 @@ function PublicWebPresence({ data }: { data: Record<string, unknown> }) {
                       </a>
                     ) : null}
                     {imageUrl ? (
-                      <a href={imageUrl} target="_blank" rel="noreferrer" className="break-all text-slate-400 hover:text-white">
+                      <a href={imageUrl} target="_blank" rel="noreferrer" className="break-all text-[var(--muted)] hover:text-white">
                         Image URL: {imageUrl}
                       </a>
                     ) : null}
@@ -801,7 +801,7 @@ function PublicWebPresence({ data }: { data: Record<string, unknown> }) {
         </div>
       ) : null}
 
-      <div className="mt-3 text-[11px] leading-5 text-slate-600">
+      <div className="mt-3 text-[11px] leading-5 text-[var(--muted)]">
         Provider: {provider}. {String(data.coverage_note ?? "")}
       </div>
     </div>
@@ -823,7 +823,7 @@ function WebPresence({ data }: { data: Record<string, unknown> }) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="text-sm font-medium text-slate-200">Public Web Presence</div>
-          <div className="mt-1 text-xs text-slate-500">
+          <div className="mt-1 text-xs text-[var(--muted)]">
             Find where this image or visually related copies appear on indexed public web pages.
           </div>
         </div>
@@ -856,7 +856,7 @@ function WebPresence({ data }: { data: Record<string, unknown> }) {
       )}
 
       {(entities.length > 0 || labels.length > 0) && (
-        <div className="mt-4 rounded-xl border border-white/5 bg-black/10 p-3">
+        <div className="mt-4 rounded-xl border border-[var(--border)] bg-black/10 p-3">
           <div className="text-xs font-medium text-slate-300">Web context</div>
           <div className="mt-2 flex flex-wrap gap-2">
             {labels.map((item, index) => (
@@ -880,7 +880,7 @@ function WebPresence({ data }: { data: Record<string, unknown> }) {
       )}
 
       {data.note ? (
-        <div className="mt-3 text-[11px] leading-5 text-slate-600">{String(data.note)}</div>
+        <div className="mt-3 text-[11px] leading-5 text-[var(--muted)]">{String(data.note)}</div>
       ) : null}
 
       <div className="mt-2 text-[10px] text-slate-700">
@@ -915,14 +915,14 @@ function WebList({
               href={url}
               target="_blank"
               rel="noreferrer"
-              className="block rounded-lg border border-white/5 bg-black/10 p-3 hover:bg-white/[.04]"
+              className="block rounded-lg border border-[var(--border)] bg-black/10 p-3 hover:bg-[var(--panel-soft)]"
             >
               <div className="break-all text-xs text-cyan-300">{url}</div>
               {titleText ? (
-                <div className="mt-1 text-xs text-slate-400">{titleText}</div>
+                <div className="mt-1 text-xs text-[var(--muted)]">{titleText}</div>
               ) : null}
               {record.matching_image_url ? (
-                <div className="mt-1 break-all text-[10px] text-slate-600">
+                <div className="mt-1 break-all text-[10px] text-[var(--muted)]">
                   Matching image: {String(record.matching_image_url)}
                 </div>
               ) : null}
@@ -936,8 +936,8 @@ function WebList({
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[.02] p-3">
-      <div className="text-xs uppercase tracking-[.12em] text-slate-600">
+    <div className="rounded-xl border border-[var(--border)] bg-white/[.02] p-3">
+      <div className="text-xs uppercase tracking-[.12em] text-[var(--muted)]">
         {label}
       </div>
       <div className="mt-1 text-sm font-medium text-slate-300">{value}</div>
