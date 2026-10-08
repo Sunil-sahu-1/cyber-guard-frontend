@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { Loader2, ShieldAlert } from "lucide-react";
 
 export function Panel({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <section className={"glass rounded-2xl " + className}>{children}</section>;
+  return <section className={"glass rounded-[20px] border-[var(--border)] " + className}>{children}</section>;
 }
 
 export function PageTitle({
@@ -17,10 +17,10 @@ export function PageTitle({
   action?: ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+    <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <div className="mb-1 text-[10px] uppercase tracking-[.22em] text-[var(--accent)]">Cyber Guard / Command Center</div>
-        <h1 className="text-2xl font-bold tracking-tight text-[var(--text)] md:text-3xl">{title}</h1>
+        <div className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.22em] text-[var(--accent)]"><span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(6,182,212,.7)]" /> Cyber Guard / Command Center</div>
+        <h1 className="text-2xl font-black tracking-tight text-[var(--text)] md:text-3xl">{title}</h1>
         {description && <p className="mt-1 max-w-3xl text-sm text-[var(--muted)]">{description}</p>}
       </div>
       {action}
