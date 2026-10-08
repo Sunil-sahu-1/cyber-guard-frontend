@@ -7,6 +7,8 @@
   --page: #f3f7fb;
   --page-2: #e9f1f8;
   --panel: rgba(255, 255, 255, 0.88);
+  --sidebar: rgba(249, 252, 255, 0.94);
+  --header: rgba(255, 255, 255, 0.90);
   --panel-solid: #ffffff;
   --panel-soft: rgba(17, 41, 66, 0.045);
   --border: rgba(30, 70, 105, 0.12);
@@ -107,6 +109,8 @@ button {
   --page: #020611;
   --page-2: #071326;
   --panel: rgba(7, 17, 34, 0.80);
+  --sidebar: rgba(4, 12, 25, 0.94);
+  --header: rgba(3, 9, 20, 0.88);
   --panel-solid: #071326;
   --panel-soft: rgba(255, 255, 255, 0.035);
   --border: rgba(115, 178, 255, 0.15);
@@ -398,4 +402,30 @@ button {
 [data-theme="dark"] .placeholder\\:text-slate-600::placeholder,
 [data-theme="dark"] .placeholder\\:text-slate-500::placeholder {
   color: #7186a2 !important;
+}
+
+
+/* Cyber Guard professional UI layer */
+.cg-page {
+  animation: cg-page-in 360ms ease both;
+}
+@keyframes cg-page-in {
+  from { opacity: .0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.cg-section-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .20em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.cg-card {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 18px;
+  box-shadow: 0 12px 34px rgba(24, 55, 85, .055);
+}
+[data-theme="dark"] .cg-card {
+  box-shadow: 0 16px 42px rgba(0, 0, 0, .20);
 }
