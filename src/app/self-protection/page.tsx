@@ -97,11 +97,11 @@ export default function SelfProtectionPage() {
         <Panel className="p-5">
           <div className="flex items-center gap-3">
             <div className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-400/10 ring-1 ring-cyan-300/20">
-              <Shield className="h-5 w-5 text-cyan-300" />
+              <Shield className="h-5 w-5 text-[var(--accent)]" />
             </div>
             <div>
               <h2 className="font-semibold">Your public IPs</h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[var(--muted)]">
                 IPv4 drives the lookup. IPv6 is read-only and device-observed.
               </p>
             </div>
@@ -142,7 +142,7 @@ export default function SelfProtectionPage() {
               Detect device IPs again
             </Button>
 
-            <div className="rounded-xl border border-amber-300/10 bg-amber-300/[.04] p-3 text-xs leading-5 text-slate-500">
+            <div className="rounded-xl border border-amber-300/10 bg-amber-300/[.04] p-3 text-xs leading-5 text-[var(--muted)]">
               The IPv6 field is intentionally locked. An arbitrary IPv4 address
               cannot be mathematically converted into its real IPv6 address.
               If this device has public IPv6, it is detected separately.
@@ -157,7 +157,7 @@ export default function SelfProtectionPage() {
         </Panel>
 
         <div className="space-y-5">
-          {result ? <IPOverview result={result} /> : <Panel className="grid min-h-[420px] place-items-center p-6 text-center text-sm text-slate-600">Run an IPv4 lookup to populate your self-protection data.</Panel>}
+          {result ? <IPOverview result={result} /> : <Panel className="grid min-h-[420px] place-items-center p-6 text-center text-sm text-[var(--muted)]">Run an IPv4 lookup to populate your self-protection data.</Panel>}
         </div>
       </div>
     </ProtectedShell>
@@ -226,17 +226,17 @@ function DeviceFingerprint() {
     <Panel className="mb-5 p-5">
       <div className="flex items-start gap-3">
         <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyan-400/10 ring-1 ring-cyan-300/20">
-          <Fingerprint className="h-5 w-5 text-cyan-300" />
+          <Fingerprint className="h-5 w-5 text-[var(--accent)]" />
         </div>
         <div>
           <h2 className="font-semibold">Device Fingerprint</h2>
-          <p className="mt-1 text-sm leading-6 text-slate-500">
+          <p className="mt-1 text-sm leading-6 text-[var(--muted)]">
             Cyber Guard reads limited browser and device signals only after you give explicit permission. The fingerprint is a SHA-256 hash of those signals; raw values are not sent to the backend by this feature.
           </p>
         </div>
       </div>
 
-      <div className="mt-5 rounded-xl border border-cyan-300/10 bg-cyan-300/[.04] p-4 text-sm leading-6 text-slate-400">
+      <div className="mt-5 rounded-xl border border-cyan-300/10 bg-cyan-300/[.04] p-4 text-sm leading-6 text-[var(--muted)]">
         <div className="font-medium text-slate-200">Terms & Conditions — required consent</div>
         <ul className="mt-2 list-disc space-y-1 pl-5">
           <li>You choose whether Cyber Guard may read the browser/device signals listed below.</li>
@@ -247,7 +247,7 @@ function DeviceFingerprint() {
         </ul>
       </div>
 
-      <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[.025] p-4 text-sm text-slate-300">
+      <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4 text-sm text-[var(--muted)]">
         <input
           type="checkbox"
           checked={consent}
@@ -271,7 +271,7 @@ function DeviceFingerprint() {
         Generate Device Fingerprint
       </Button>
 
-      {message && <div className="mt-3 text-xs text-slate-500">{message}</div>}
+      {message && <div className="mt-3 text-xs text-[var(--muted)]">{message}</div>}
 
       {fingerprint && (
         <div className="mt-5">
@@ -298,9 +298,9 @@ function IPOverview({ result }: { result: SelfProtectionIPLookup }) {
       <Panel className="p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <div className="text-xs uppercase tracking-[.18em] text-slate-600">Public IP identity</div>
+            <div className="text-xs uppercase tracking-[.18em] text-[var(--muted)]">Public IP identity</div>
             <div className="mt-2 flex items-center gap-3">
-              <Globe2 className="h-6 w-6 text-cyan-300" />
+              <Globe2 className="h-6 w-6 text-[var(--accent)]" />
               <span className="break-all text-2xl font-semibold">{result.ip}</span>
             </div>
           </div>
@@ -374,7 +374,7 @@ function IPOverview({ result }: { result: SelfProtectionIPLookup }) {
 
       <Panel className="p-5">
         <div className="flex items-center gap-2">
-          <Globe2 className="h-4 w-4 text-cyan-300" />
+          <Globe2 className="h-4 w-4 text-[var(--accent)]" />
           <h2 className="font-semibold">Network identity snapshot</h2>
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -393,7 +393,7 @@ function IPOverview({ result }: { result: SelfProtectionIPLookup }) {
           <Stat label="Latitude" value={result.latitude} />
           <Stat label="Longitude" value={result.longitude} />
         </div>
-        <div className="mt-4 rounded-xl border border-white/5 bg-white/[.025] p-4 text-xs leading-5 text-slate-500">
+        <div className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4 text-xs leading-5 text-[var(--muted)]">
           IP geolocation is approximate. It identifies the network's likely
           geographic area, not the exact physical address of a device.
         </div>
@@ -404,7 +404,7 @@ function IPOverview({ result }: { result: SelfProtectionIPLookup }) {
           <summary className="cursor-pointer text-sm font-semibold text-slate-200">
             Raw lookup data
           </summary>
-          <pre className="mt-4 max-h-96 overflow-auto rounded-xl bg-black/30 p-4 text-xs leading-5 text-slate-500">
+          <pre className="mt-4 max-h-96 overflow-auto rounded-xl bg-black/30 p-4 text-xs leading-5 text-[var(--muted)]">
             {JSON.stringify(result, null, 2)}
           </pre>
         </details>
@@ -412,14 +412,14 @@ function IPOverview({ result }: { result: SelfProtectionIPLookup }) {
 
       <Panel className="p-5">
         <h2 className="font-semibold">Public usage / ownership view</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-500">
+        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
           This section shows the public network ownership signals available
           from the lookup: reverse DNS, ASN, organization, ISP and network
           domain. It does not claim to enumerate every website using the IP.
         </p>
-        <div className="mt-4 rounded-xl border border-white/5 bg-white/[.025] p-4">
-          <div className="text-xs text-slate-600">Lookup source</div>
-          <div className="mt-1 text-sm text-slate-300">{result.source}</div>
+        <div className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
+          <div className="text-xs text-[var(--muted)]">Lookup source</div>
+          <div className="mt-1 text-sm text-[var(--muted)]">{result.source}</div>
         </div>
       </Panel>
     </>
@@ -428,7 +428,7 @@ function IPOverview({ result }: { result: SelfProtectionIPLookup }) {
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <label className="block text-sm text-slate-400">
+    <label className="block text-sm text-[var(--muted)]">
       {label}
       <div className="mt-2">{children}</div>
     </label>
@@ -437,8 +437,8 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 
 function Stat({ label, value }: { label: string; value?: string | number | null }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[.025] p-4">
-      <div className="text-xs text-slate-600">{label}</div>
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
+      <div className="text-xs text-[var(--muted)]">{label}</div>
       <div className="mt-1 break-words text-sm font-semibold text-slate-200">
         {value == null || value === "" ? "Not available" : String(value)}
       </div>
@@ -458,14 +458,14 @@ function InfoCard({
   return (
     <Panel className="p-5">
       <div className="flex items-center gap-2">
-        <Icon className="h-4 w-4 text-cyan-300" />
+        <Icon className="h-4 w-4 text-[var(--accent)]" />
         <h2 className="font-semibold">{title}</h2>
       </div>
       <div className="mt-4 space-y-2">
         {rows.map(([label, value]) => (
-          <div key={label} className="flex items-start justify-between gap-4 rounded-lg bg-white/[.025] px-3 py-2 text-sm">
-            <span className="text-slate-600">{label}</span>
-            <span className="max-w-[65%] break-words text-right text-slate-300">
+          <div key={label} className="flex items-start justify-between gap-4 rounded-lg bg-[var(--panel-soft)] px-3 py-2 text-sm">
+            <span className="text-[var(--muted)]">{label}</span>
+            <span className="max-w-[65%] break-words text-right text-[var(--muted)]">
               {value == null || value === "" ? "Not available" : String(value)}
             </span>
           </div>
