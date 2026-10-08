@@ -39,7 +39,17 @@ export default function AnomalyPage(){
       <Analyzer title="Record login activity" value={activity} setValue={setActivity} loading={loading} onRun={()=>run(()=>anomalyApi.recordLoginActivity(JSON.parse(activity)))} />
     </div>
     {error && <Panel className="mt-5 border border-red-400/20 p-4 text-sm text-red-300">{error}</Panel>}
-    {result && <Panel className="mt-5 p-5"><div className="flex items-center gap-2"><ShieldAlert className="h-4 w-4 text-cyan-300"/><h2 className="font-semibold">Latest response</h2></div><pre className="mt-4 max-h-[420px] overflow-auto rounded-xl bg-black/20 p-4 text-xs text-slate-400">{JSON.stringify(result,null,2)}</pre></Panel>}
+    {result && (
+      <Panel className="mt-5 p-5">
+        <div className="flex items-center gap-2">
+          <ShieldAlert className="h-4 w-4 text-cyan-300"/>
+          <h2 className="font-semibold">Latest analysis</h2>
+        </div>
+        <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          <ResponseSummary data={result}/>
+        </div>
+      </Panel>
+    )}
     <Panel className="mt-5 p-5">
       <div className="flex items-center justify-between"><div className="flex items-center gap-2"><History className="h-4 w-4 text-cyan-300"/><h2 className="font-semibold">Anomaly history</h2></div><Button variant="ghost" onClick={loadHistory}><RefreshCw className="h-4 w-4"/>Refresh</Button></div>
       <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
@@ -51,6 +61,64 @@ export default function AnomalyPage(){
       </div>
     </Panel>
   </ProtectedShell>;
+}
+
+function ResponseSummary({data}:{data:JsonObject}){
+  const entries=Object.entries(data);
+  return <>
+    {entries.map(([key,value])=>{
+      if(value === null || value === undefined || value === "") return null;
+      return (
+        <div key={key} className="rounded-xl border border-white/10 bg-white/[.02] p-4">
+          <div className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
+            {formatLabel(key)}
+          </div>
+          <div className="mt-2 text-sm text-slate-200">
+            <DisplayValue value={value}/>
+          </div>
+        </div>
+      );
+    })}
+  </>;
+}
+
+function DisplayValue({value}:{value:unknown}){
+  if(value === null || value === undefined) return <span className="text-slate-500">—</span>;
+  if(typeof value === "boolean"){
+    return <span className={value ? "text-amber-300" : "text-emerald-300"}>{value ? "Yes" : "No"}</span>;
+  }
+  if(typeof value === "number"){
+    return <span className="font-semibold text-cyan-200">{value}</span>;
+  }
+  if(typeof value === "string"){
+    return <span className="break-words">{value || "—"}</span>;
+  }
+  if(Array.isArray(value)){
+    return value.length ? (
+      <div className="space-y-2">
+        {value.map((item,index)=><div key={index} className="rounded-lg border border-white/10 bg-black/10 p-2"><DisplayValue value={item}/></div>)}
+      </div>
+    ) : <span className="text-slate-500">None</span>;
+  }
+  if(typeof value === "object"){
+    return (
+      <div className="mt-1 space-y-2">
+        {Object.entries(value as Record<string, unknown>).map(([key,item])=>(
+          <div key={key} className="flex items-start justify-between gap-4 border-b border-white/5 pb-2 last:border-0 last:pb-0">
+            <span className="shrink-0 text-xs text-slate-500">{formatLabel(key)}</span>
+            <span className="text-right"><DisplayValue value={item}/></span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return <span>{String(value)}</span>;
+}
+
+function formatLabel(value:string){
+  return value
+    .replace(/_/g," ")
+    .replace(/\b\w/g,letter=>letter.toUpperCase());
 }
 
 function Analyzer({title,value,setValue,onRun,loading}:{title:string;value:string;setValue:(v:string)=>void;onRun:()=>void;loading:boolean}){
