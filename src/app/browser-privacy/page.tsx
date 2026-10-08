@@ -133,7 +133,7 @@ export default function BrowserPrivacyPage() {
         action={
           <div className="flex items-center gap-3">
             <StatusDot state={scannerState} />
-            <span className="text-sm text-slate-400">
+            <span className="text-sm text-[var(--muted)]">
               {scannerState === "connected" || scannerState === "scanning" ? "Automatic monitoring" : "Scanner unavailable"}
             </span>
           </div>
@@ -143,10 +143,10 @@ export default function BrowserPrivacyPage() {
       <div className="grid gap-5 lg:grid-cols-2">
         <Panel className="p-5">
           <div className="flex items-center gap-3">
-            <Cookie className="h-5 w-5 text-cyan-300" />
+            <Cookie className="h-5 w-5 text-[var(--accent)]" />
             <h2 className="font-semibold">Cookie Security</h2>
           </div>
-          <p className="mt-3 text-sm leading-6 text-slate-400">
+          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
             Cookie values are never uploaded. Cyber Guard receives metadata such as name, domain,
             path, Secure, HttpOnly and SameSite flags.
           </p>
@@ -158,14 +158,14 @@ export default function BrowserPrivacyPage() {
 
         <Panel className="p-5">
           <div className="flex items-center gap-3">
-            <Puzzle className="h-5 w-5 text-cyan-300" />
+            <Puzzle className="h-5 w-5 text-[var(--accent)]" />
             <h2 className="font-semibold">Installed Extensions</h2>
           </div>
-          <p className="mt-3 text-sm leading-6 text-slate-400">
+          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
             Cyber Guard automatically reads extension name, version, enabled state, declared
             permissions and host permissions from the browser extension-management API.
           </p>
-          <div className="mt-4 rounded-xl border border-amber-300/10 bg-amber-300/[.04] p-4 text-xs leading-5 text-slate-500">
+          <div className="mt-4 rounded-xl border border-amber-300/10 bg-amber-300/[.04] p-4 text-xs leading-5 text-[var(--muted)]">
             Declared permissions indicate allowed access. They do not by themselves prove actual runtime data usage.
           </div>
         </Panel>
@@ -175,11 +175,11 @@ export default function BrowserPrivacyPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <Radio className="h-4 w-4 text-cyan-300" />
+              <Radio className="h-4 w-4 text-[var(--accent)]" />
               <h2 className="font-semibold">Automatic Browser Monitoring</h2>
             </div>
-            <p className="mt-1 text-xs leading-5 text-slate-500">{message}</p>
-            {lastScan && <p className="mt-1 text-xs text-slate-600">Last automatic sync: {lastScan}</p>}
+            <p className="mt-1 text-xs leading-5 text-[var(--muted)]">{message}</p>
+            {lastScan && <p className="mt-1 text-xs text-[var(--muted)]">Last automatic sync: {lastScan}</p>}
           </div>
           <Button variant="ghost" onClick={requestScan}>
             <RefreshCw className="mr-2 h-4 w-4" />
@@ -192,7 +192,7 @@ export default function BrowserPrivacyPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-semibold">Latest Browser Scan</h2>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-[var(--muted)]">
               Data comes from the browser companion and is stored against your Cyber Guard account.
             </p>
           </div>
@@ -203,7 +203,7 @@ export default function BrowserPrivacyPage() {
         </div>
 
         {!latest ? (
-          <div className="mt-5 rounded-xl border border-white/10 bg-white/[.02] p-5 text-sm text-slate-500">
+          <div className="mt-5 rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-5 text-sm text-[var(--muted)]">
             No scan received yet. Once the companion is installed and active, this section updates automatically.
           </div>
         ) : (
@@ -221,7 +221,7 @@ export default function BrowserPrivacyPage() {
                 {overallRisk ? <AlertTriangle className="mt-0.5 h-5 w-5 text-amber-300" /> : <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-300" />}
                 <div>
                   <div className="font-semibold text-slate-200">{overallRisk ? "Privacy attention required" : "Browser privacy looks good"}</div>
-                  <div className="mt-1 text-xs leading-5 text-slate-500">
+                  <div className="mt-1 text-xs leading-5 text-[var(--muted)]">
                     {sensitiveRisk && "Sensitive cookie names were detected. "}
                     {extensionRisk && "One or more extensions have high-impact permissions. "}
                     {!overallRisk && "No sensitive cookie names or high-impact extension permissions were detected in the latest scan."}
@@ -233,11 +233,11 @@ export default function BrowserPrivacyPage() {
             <div className="grid gap-5 lg:grid-cols-2">
               <DataList
                 title="Cookie Metadata"
-                icon={<Cookie className="h-4 w-4 text-cyan-300" />}
+                icon={<Cookie className="h-4 w-4 text-[var(--accent)]" />}
                 items={latestCookies.map((cookie) => (
-                  <div key={cookie.domain + cookie.path + cookie.name} className="rounded-lg border border-white/10 bg-white/[.02] p-3">
+                  <div key={cookie.domain + cookie.path + cookie.name} className="rounded-lg border border-[var(--border)] bg-[var(--panel-soft)] p-3">
                     <div className="font-medium text-slate-200">{cookie.name}</div>
-                    <div className="mt-1 text-xs text-slate-500">
+                    <div className="mt-1 text-xs text-[var(--muted)]">
                       {cookie.domain} · {cookie.path} · {cookie.secure ? "Secure" : "Not Secure"} ·
                       {cookie.http_only ? " HttpOnly" : " Script-readable"} · SameSite: {cookie.same_site}
                     </div>
@@ -246,17 +246,17 @@ export default function BrowserPrivacyPage() {
               />
               <DataList
                 title="Installed Extensions"
-                icon={<Puzzle className="h-4 w-4 text-cyan-300" />}
+                icon={<Puzzle className="h-4 w-4 text-[var(--accent)]" />}
                 items={latestExtensions.map((extension) => (
-                  <div key={extension.id || extension.name} className="rounded-lg border border-white/10 bg-white/[.02] p-3">
+                  <div key={extension.id || extension.name} className="rounded-lg border border-[var(--border)] bg-[var(--panel-soft)] p-3">
                     <div className="font-medium text-slate-200">{extension.name || "Unnamed extension"}</div>
-                    <div className="mt-1 text-xs text-slate-500">
+                    <div className="mt-1 text-xs text-[var(--muted)]">
                       v{extension.version || "unknown"} · {extension.enabled ? "Enabled" : "Disabled"} · ID: {extension.id || "unknown"}
                     </div>
-                    <div className="mt-2 text-xs text-slate-400">
+                    <div className="mt-2 text-xs text-[var(--muted)]">
                       Permissions: {extension.permissions.join(", ") || "None declared"}
                     </div>
-                    <div className="mt-1 text-xs text-slate-500">
+                    <div className="mt-1 text-xs text-[var(--muted)]">
                       Hosts: {extension.host_permissions.join(", ") || "None declared"}
                     </div>
                     {extension.high_impact_permissions.length > 0 && (
@@ -269,7 +269,7 @@ export default function BrowserPrivacyPage() {
               />
             </div>
 
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-[var(--muted)]">
               Last scan: {new Date(latest.scanned_at).toLocaleString()} · Browser: {latest.browser || "Unknown"} ·
               Platform: {latest.platform || "Unknown"}
             </div>
@@ -279,21 +279,21 @@ export default function BrowserPrivacyPage() {
 
       <Panel className="mt-5 p-5">
         <div className="flex items-center gap-3">
-          <Download className="h-5 w-5 text-cyan-300" />
+          <Download className="h-5 w-5 text-[var(--accent)]" />
           <div>
             <h2 className="font-semibold">One-Time Setup</h2>
-            <p className="text-xs text-slate-500">After the companion is installed, there is no pairing code or manual scan workflow.</p>
+            <p className="text-xs text-[var(--muted)]">After the companion is installed, there is no pairing code or manual scan workflow.</p>
           </div>
         </div>
 
-        <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-6 text-slate-400">
+        <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-6 text-[var(--muted)]">
           <li>Install the Cyber Guard Browser Privacy Scanner extension once.</li>
           <li>Open this Browser Privacy page.</li>
           <li>The dashboard detects the extension automatically.</li>
           <li>Browser metadata is collected automatically and synced every minute while the dashboard is open.</li>
         </ol>
 
-        <div className="mt-5 rounded-xl border border-cyan-300/10 bg-cyan-300/[.04] p-4 text-xs leading-5 text-slate-500">
+        <div className="mt-5 rounded-xl border border-cyan-300/10 bg-cyan-300/[.04] p-4 text-xs leading-5 text-[var(--muted)]">
           The browser itself still controls extension installation and permission approval. A website cannot silently install an extension or bypass browser permission controls.
         </div>
       </Panel>
@@ -308,19 +308,19 @@ function StatusDot({ state }: { state: ScannerState }) {
 
 function Feature({ icon: Icon, title, text }: { icon: typeof Eye; title: string; text: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[.025] p-4">
-      <Icon className="h-4 w-4 text-cyan-300" />
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
+      <Icon className="h-4 w-4 text-[var(--accent)]" />
       <div className="mt-2 text-sm font-semibold text-slate-200">{title}</div>
-      <div className="mt-1 text-xs leading-5 text-slate-500">{text}</div>
+      <div className="mt-1 text-xs leading-5 text-[var(--muted)]">{text}</div>
     </div>
   );
 }
 
 function Metric({ value, label }: { value: number; label: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[.025] p-4">
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
       <div className="text-xl font-bold text-white">{value}</div>
-      <div className="mt-1 text-xs text-slate-500">{label}</div>
+      <div className="mt-1 text-xs text-[var(--muted)]">{label}</div>
     </div>
   );
 }
@@ -331,7 +331,7 @@ function DataList({ title, icon, items }: { title: string; icon?: ReactNode; ite
       <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-200">{icon}{title}</div>
       <div className="max-h-[420px] space-y-2 overflow-auto">
         {items.length > 0 ? items : (
-          <div className="rounded-lg border border-white/10 p-4 text-xs text-slate-500">No data.</div>
+          <div className="rounded-lg border border-[var(--border)] p-4 text-xs text-[var(--muted)]">No data.</div>
         )}
       </div>
     </div>
