@@ -38,10 +38,10 @@ export default function Threats() {
           </Button>
         }
       />
-      <Panel className="overflow-hidden">
-        <div className="border-b border-white/10 p-4">
+      <Panel className="overflow-hidden shadow-[0_18px_55px_rgba(25,65,100,.06)]">
+        <div className="border-b border-[var(--border)] bg-[var(--panel-soft)] p-4">
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
             <Input
               value={q}
               onChange={(e) => setQ(e.target.value)}
@@ -52,7 +52,7 @@ export default function Threats() {
         </div>
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="p-10 text-center text-slate-500">Loading threats…</div>
+            <div className="p-10 text-center text-[var(--muted)]">Loading threats…</div>
           ) : filtered.length ? (
             <table className="w-full text-left text-sm">
               <thead className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-600">
@@ -66,17 +66,17 @@ export default function Threats() {
               </thead>
               <tbody>
                 {filtered.map((t) => (
-                  <tr key={t.id} className="border-b border-white/5 hover:bg-white/[.025]">
+                  <tr key={t.id} className="border-b border-[var(--border)] hover:bg-[var(--panel-soft)]">
                     <td className="px-5 py-4">
                       <Link
                         href={"/threats/" + t.id}
-                        className="font-medium text-cyan-200 hover:text-cyan-100"
+                        className="font-medium text-[var(--accent)] hover:underline"
                       >
                         {t.threat_type.replaceAll("_", " ")}
                       </Link>
                       <div className="mt-1 text-xs text-slate-600">#{t.id}</div>
                     </td>
-                    <td className="px-5 py-4 text-slate-400">{t.source_type}</td>
+                    <td className="px-5 py-4 text-[var(--muted)]">{t.source_type}</td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold">{t.risk_score}</span>
