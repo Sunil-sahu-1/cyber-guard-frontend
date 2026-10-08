@@ -182,7 +182,7 @@ export default function VoiceVerificationPage() {
             </div>
             <div>
               <h2 className="font-semibold">AI Voice Verification</h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[var(--muted)]">
                 Detect synthetic and heavily processed speech signals.
               </p>
             </div>
@@ -207,28 +207,28 @@ export default function VoiceVerificationPage() {
             <div className="mt-4 text-sm font-medium">
               {file ? file.name : "Choose a voice recording"}
             </div>
-            <div className="mt-2 text-xs text-slate-500">
+            <div className="mt-2 text-xs text-[var(--muted)]">
               WAV • MP3 • MPEG • MPGA • M4A • FLAC • OGG • AAC • WEBM • OPUS • WMA • AIFF • CAF •
               AMR • MKA
             </div>
-            <div className="mt-1 text-xs text-slate-600">
+            <div className="mt-1 text-xs text-[var(--muted)]">
               Maximum 20 MB • First 30 seconds analyzed • Recommended: 5–30 seconds of clear speech
             </div>
           </button>
 
           {file && (
-            <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-white/[.03] p-3">
+            <div className="mt-4 flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-3">
               <div className="flex min-w-0 items-center gap-3">
                 <FileAudio className="h-5 w-5 shrink-0 text-emerald-300" />
                 <div className="min-w-0">
                   <div className="truncate text-sm text-slate-300">{file.name}</div>
-                  <div className="text-xs text-slate-600">{formatBytes(file.size)}</div>
+                  <div className="text-xs text-[var(--muted)]">{formatBytes(file.size)}</div>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={clearFile}
-                className="rounded-lg p-2 text-slate-500 hover:bg-white/5 hover:text-white"
+                className="rounded-lg p-2 text-[var(--muted)] hover:bg-white/5 hover:text-white"
                 aria-label="Remove audio"
               >
                 <X className="h-4 w-4" />
@@ -238,7 +238,7 @@ export default function VoiceVerificationPage() {
 
           {preview && (
             <div className="mt-4 rounded-xl border border-emerald-300/10 bg-emerald-300/[.03] p-4">
-              <div className="mb-2 text-xs uppercase tracking-[.16em] text-slate-600">
+              <div className="mb-2 text-xs uppercase tracking-[.16em] text-[var(--muted)]">
                 Recording preview
               </div>
               <audio controls src={preview} className="w-full" />
@@ -259,7 +259,7 @@ export default function VoiceVerificationPage() {
           <div className="mt-5 rounded-xl border border-amber-300/10 bg-amber-300/[.03] p-4">
             <div className="flex gap-3">
               <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" />
-              <p className="text-xs leading-5 text-slate-500">
+              <p className="text-xs leading-5 text-[var(--muted)]">
                 Frequency consistency alone is not enough. Human voices naturally change, and modern
                 AI voices can also introduce variation. This system combines multiple acoustic
                 signals.
@@ -275,7 +275,7 @@ export default function VoiceVerificationPage() {
             <div className="text-center">
               <Mic className="mx-auto h-12 w-12 text-emerald-300/40" />
               <h2 className="mt-4 font-semibold">Voice analysis ready</h2>
-              <p className="mt-1 max-w-sm text-sm text-slate-600">
+              <p className="mt-1 max-w-sm text-sm text-[var(--muted)]">
                 Upload a recording and start verification to see the acoustic analysis and
                 synthetic-voice risk assessment.
               </p>
@@ -329,11 +329,11 @@ function VoiceResult({ result }: { result: Result }) {
     <Panel className="p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="text-xs uppercase tracking-[.18em] text-slate-600">
+          <div className="text-xs uppercase tracking-[.18em] text-[var(--muted)]">
             Voice verification result
           </div>
           <div className="mt-2 text-3xl font-semibold">{Math.round(result.risk_score)}/100</div>
-          <div className="mt-1 text-xs text-slate-500">
+          <div className="mt-1 text-xs text-[var(--muted)]">
             Synthetic voice risk score returned by the analysis engine
           </div>
         </div>
@@ -357,18 +357,18 @@ function VoiceResult({ result }: { result: Result }) {
       </div>
 
       {result.explanation && (
-        <div className="mt-4 rounded-xl border border-white/10 bg-white/[.02] p-4">
+        <div className="mt-4 rounded-xl border border-[var(--border)] bg-white/[.02] p-4">
           <div className="text-sm font-medium">Analysis explanation</div>
-          <p className="mt-2 text-sm leading-6 text-slate-400">{result.explanation}</p>
+          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{result.explanation}</p>
         </div>
       )}
 
       {result.recommendation && (
         <div className="mt-4 rounded-xl border border-cyan-300/10 bg-cyan-300/[.03] p-4">
-          <div className="text-xs uppercase tracking-[.12em] text-slate-600">
+          <div className="text-xs uppercase tracking-[.12em] text-[var(--muted)]">
             Recommendation from analysis
           </div>
-          <p className="mt-2 text-sm leading-6 text-slate-400">{result.recommendation}</p>
+          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{result.recommendation}</p>
         </div>
       )}
 
@@ -379,7 +379,7 @@ function VoiceResult({ result }: { result: Result }) {
             {result.indicators.map((item, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-violet-300/10 bg-violet-300/[.03] p-3 text-sm leading-5 text-slate-400"
+                className="rounded-xl border border-violet-300/10 bg-violet-300/[.03] p-3 text-sm leading-5 text-[var(--muted)]"
               >
                 {item}
               </div>
@@ -391,13 +391,13 @@ function VoiceResult({ result }: { result: Result }) {
       {Object.keys(components).length > 0 && (
         <div className="mt-5">
           <div className="text-sm font-medium">Acoustic signal analysis</div>
-          <p className="mt-1 text-xs text-slate-600">
+          <p className="mt-1 text-xs text-[var(--muted)]">
             Actual component scores returned by the voice analysis engine.
           </p>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             {Object.entries(components).map(([key, value]) => (
-              <div key={key} className="rounded-xl border border-white/10 bg-white/[.02] p-3">
-                <div className="text-xs capitalize text-slate-600">{humanize(key)}</div>
+              <div key={key} className="rounded-xl border border-[var(--border)] bg-white/[.02] p-3">
+                <div className="text-xs capitalize text-[var(--muted)]">{humanize(key)}</div>
                 <div className="mt-1 text-lg font-semibold text-slate-200">
                   {Number(value).toFixed(2)}/100
                 </div>
@@ -408,7 +408,7 @@ function VoiceResult({ result }: { result: Result }) {
       )}
 
       {Object.keys(features).length > 0 && (
-        <details className="mt-5 rounded-xl border border-white/10 p-4">
+        <details className="mt-5 rounded-xl border border-[var(--border)] p-4">
           <summary className="cursor-pointer text-sm font-medium text-slate-300">
             Technical measurements from the recording
           </summary>
@@ -416,8 +416,8 @@ function VoiceResult({ result }: { result: Result }) {
             {Object.entries(features)
               .filter(([key]) => key in featureLabels)
               .map(([key, value]) => (
-                <div key={key} className="rounded-xl border border-white/10 bg-white/[.02] p-3">
-                  <div className="text-xs text-slate-600">{featureLabels[key]}</div>
+                <div key={key} className="rounded-xl border border-[var(--border)] bg-white/[.02] p-3">
+                  <div className="text-xs text-[var(--muted)]">{featureLabels[key]}</div>
                   <div className="mt-1 text-sm text-slate-300">{formatFeature(key, value)}</div>
                 </div>
               ))}
@@ -430,8 +430,8 @@ function VoiceResult({ result }: { result: Result }) {
       )}
 
       {result.detector_note && (
-        <div className="mt-4 rounded-xl border border-amber-300/10 bg-amber-300/[.03] p-4 text-xs leading-5 text-slate-500">
-          <span className="font-medium text-slate-400">Detector note: </span>
+        <div className="mt-4 rounded-xl border border-amber-300/10 bg-amber-300/[.03] p-4 text-xs leading-5 text-[var(--muted)]">
+          <span className="font-medium text-[var(--muted)]">Detector note: </span>
           {result.detector_note}
         </div>
       )}
@@ -467,8 +467,8 @@ function TechnicalAudioAnalysis({ data }: { data: TechnicalAnalysis }) {
   ];
 
   return (
-    <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/30">
-      <div className="border-b border-white/10 px-4 pt-3">
+    <div className="mt-6 overflow-hidden rounded-2xl border border-[var(--border)] bg-slate-950/30">
+      <div className="border-b border-[var(--border)] px-4 pt-3">
         <div className="flex gap-1 overflow-x-auto">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -482,7 +482,7 @@ function TechnicalAudioAnalysis({ data }: { data: TechnicalAnalysis }) {
                   "flex min-w-max items-center gap-2 border-b-2 px-3 py-3 text-xs font-medium transition " +
                   (active
                     ? "border-cyan-300 text-cyan-300"
-                    : "border-transparent text-slate-500 hover:text-slate-300")
+                    : "border-transparent text-[var(--muted)] hover:text-slate-300")
                 }
               >
                 <Icon className="h-4 w-4" />
@@ -500,12 +500,12 @@ function TechnicalAudioAnalysis({ data }: { data: TechnicalAnalysis }) {
               <Activity className="h-4 w-4 text-cyan-300" />
               Technical Audio Analysis
             </div>
-            <p className="mt-1 text-xs text-slate-600">
+            <p className="mt-1 text-xs text-[var(--muted)]">
               Measurements extracted directly from the uploaded recording.
             </p>
           </div>
-          <div className="hidden rounded-lg border border-white/10 bg-white/[.03] px-3 py-2 text-right sm:block">
-            <div className="text-[10px] uppercase tracking-[.14em] text-slate-600">Recording</div>
+          <div className="hidden rounded-lg border border-[var(--border)] bg-[var(--panel-soft)] px-3 py-2 text-right sm:block">
+            <div className="text-[10px] uppercase tracking-[.14em] text-[var(--muted)]">Recording</div>
             <div className="mt-1 text-xs text-slate-300">
               {number(data.duration_seconds)}s • {data.channels ?? "—"} channel • {data.sample_rate_hz ?? "—"} Hz
             </div>
@@ -528,15 +528,15 @@ function TechnicalAudioAnalysis({ data }: { data: TechnicalAnalysis }) {
 
         {activeTab === "frequency" && (
           <div>
-            <div className="rounded-xl border border-white/10 bg-white/[.02] p-4">
+            <div className="rounded-xl border border-[var(--border)] bg-white/[.02] p-4">
               <div className="space-y-4">
                 {Object.entries(frequencyLabels).map(([key, meta]) => {
                   const value = Number(frequency[key] ?? 0);
                   return (
                     <div key={key}>
                       <div className="mb-1.5 flex items-center justify-between gap-3 text-xs">
-                        <span className="text-slate-400">
-                          {meta.label} <span className="text-slate-600">({meta.range})</span>
+                        <span className="text-[var(--muted)]">
+                          {meta.label} <span className="text-[var(--muted)]">({meta.range})</span>
                         </span>
                         <span className="font-medium text-slate-300">{number(value, 1)}%</span>
                       </div>
@@ -596,8 +596,8 @@ function TechnicalAudioAnalysis({ data }: { data: TechnicalAnalysis }) {
 
 function TechnicalMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[.02] p-4">
-      <div className="text-xs uppercase tracking-[.12em] text-slate-600">{label}</div>
+    <div className="rounded-xl border border-[var(--border)] bg-white/[.02] p-4">
+      <div className="text-xs uppercase tracking-[.12em] text-[var(--muted)]">{label}</div>
       <div className="mt-2 text-xl font-semibold text-slate-200">{value}</div>
     </div>
   );
@@ -605,8 +605,8 @@ function TechnicalMetric({ label, value }: { label: string; value: string }) {
 
 function TechnicalNote({ children }: { children: ReactNode }) {
   return (
-    <div className="mt-4 rounded-xl border border-cyan-300/10 bg-cyan-300/[.03] p-4 text-xs leading-5 text-slate-500">
-      <span className="font-medium text-slate-400">Analysis note: </span>
+    <div className="mt-4 rounded-xl border border-cyan-300/10 bg-cyan-300/[.03] p-4 text-xs leading-5 text-[var(--muted)]">
+      <span className="font-medium text-[var(--muted)]">Analysis note: </span>
       {children}
     </div>
   );
@@ -614,8 +614,8 @@ function TechnicalNote({ children }: { children: ReactNode }) {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[.02] p-3">
-      <div className="text-xs uppercase tracking-[.12em] text-slate-600">{label}</div>
+    <div className="rounded-xl border border-[var(--border)] bg-white/[.02] p-3">
+      <div className="text-xs uppercase tracking-[.12em] text-[var(--muted)]">{label}</div>
       <div className="mt-1 text-sm font-medium text-slate-300">{value}</div>
     </div>
   );
