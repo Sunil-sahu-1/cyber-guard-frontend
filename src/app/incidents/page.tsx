@@ -36,7 +36,7 @@ export default function Incidents() {
         <div className="overflow-x-auto">
           {items.length ? (
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-600">
+              <thead className="border-b border-[var(--border)] text-xs uppercase tracking-wide text-[var(--muted)]">
                 <tr>
                   <th className="px-5 py-4">Incident</th>
                   <th className="px-5 py-4">Severity</th>
@@ -48,12 +48,12 @@ export default function Incidents() {
               </thead>
               <tbody>
                 {items.map((i) => (
-                  <tr key={i.id} className="border-b border-white/5">
+                  <tr key={i.id} className="border-b border-[var(--border)]">
                     <td className="px-5 py-4">
                       <Link href={"/incidents/" + i.id} className="font-medium text-cyan-200">
                         {i.title}
                       </Link>
-                      <div className="mt-1 text-xs text-slate-600">
+                      <div className="mt-1 text-xs text-[var(--muted)]">
                         #{i.id} · {i.incident_type}
                       </div>
                     </td>
@@ -61,8 +61,8 @@ export default function Incidents() {
                       <RiskBadge value={i.severity} />
                     </td>
                     <td className="px-5 py-4 font-semibold">{i.risk_score}</td>
-                    <td className="px-5 py-4 text-slate-400">{i.status}</td>
-                    <td className="px-5 py-4 text-slate-500">
+                    <td className="px-5 py-4 text-[var(--muted)]">{i.status}</td>
+                    <td className="px-5 py-4 text-[var(--muted)]">
                       {new Date(i.created_at).toLocaleString()}
                     </td>
                     <td className="px-5 py-4">
