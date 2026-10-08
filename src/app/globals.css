@@ -429,3 +429,15 @@ button {
 [data-theme="dark"] .cg-card {
   box-shadow: 0 16px 42px rgba(0, 0, 0, .20);
 }
+
+
+/* Final responsive polish */
+@media (max-width: 1023px) {
+  .space-bg { padding-bottom: 5rem; }
+}
+@media (max-width: 640px) {
+  .glass { border-radius: 16px; }
+  .space-bg { padding: .9rem; }
+  h1 { letter-spacing: -.02em; }
+  table { min-width: 680px; }
+}
