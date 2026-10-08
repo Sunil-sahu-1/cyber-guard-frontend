@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { Cookie, Download, Eye, Puzzle, RefreshCw, ShieldCheck, Radio } from "lucide-react";
+import { Cookie, Download, Eye, Puzzle, RefreshCw, ShieldCheck, Radio, AlertTriangle, CheckCircle2, Search } from "lucide-react";
 import { ProtectedShell } from "@/components/layout/ProtectedShell";
 import { Button, PageTitle, Panel } from "@/components/ui";
 import {
@@ -119,6 +119,11 @@ export default function BrowserPrivacyPage() {
   }, [loadScans, requestScan]);
 
   const latest = scans[0];
+  const sensitiveRisk = latest ? latest.sensitive_cookie_count > 0 : false;
+  const extensionRisk = latest ? latest.high_impact_extension_count > 0 : false;
+  const overallRisk = sensitiveRisk || extensionRisk;
+  const latestCookies = latest?.cookies ?? [];
+  const latestExtensions = latest?.extensions ?? [];
 
   return (
     <ProtectedShell>
@@ -211,10 +216,25 @@ export default function BrowserPrivacyPage() {
               <Metric value={latest.summary.cookie_domains} label="Cookie domains" />
             </div>
 
+            <div className={"rounded-xl border p-4 " + (overallRisk ? "border-amber-300/20 bg-amber-300/[.04]" : "border-emerald-300/20 bg-emerald-300/[.04]")}>
+              <div className="flex items-start gap-3">
+                {overallRisk ? <AlertTriangle className="mt-0.5 h-5 w-5 text-amber-300" /> : <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-300" />}
+                <div>
+                  <div className="font-semibold text-slate-200">{overallRisk ? "Privacy attention required" : "Browser privacy looks good"}</div>
+                  <div className="mt-1 text-xs leading-5 text-slate-500">
+                    {sensitiveRisk && "Sensitive cookie names were detected. "}
+                    {extensionRisk && "One or more extensions have high-impact permissions. "}
+                    {!overallRisk && "No sensitive cookie names or high-impact extension permissions were detected in the latest scan."}
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="grid gap-5 lg:grid-cols-2">
               <DataList
                 title="Cookie Metadata"
-                items={latest.cookies.map((cookie) => (
+                icon={<Cookie className="h-4 w-4 text-cyan-300" />}
+                items={latestCookies.map((cookie) => (
                   <div key={cookie.domain + cookie.path + cookie.name} className="rounded-lg border border-white/10 bg-white/[.02] p-3">
                     <div className="font-medium text-slate-200">{cookie.name}</div>
                     <div className="mt-1 text-xs text-slate-500">
@@ -226,7 +246,8 @@ export default function BrowserPrivacyPage() {
               />
               <DataList
                 title="Installed Extensions"
-                items={latest.extensions.map((extension) => (
+                icon={<Puzzle className="h-4 w-4 text-cyan-300" />}
+                items={latestExtensions.map((extension) => (
                   <div key={extension.id || extension.name} className="rounded-lg border border-white/10 bg-white/[.02] p-3">
                     <div className="font-medium text-slate-200">{extension.name || "Unnamed extension"}</div>
                     <div className="mt-1 text-xs text-slate-500">
@@ -304,10 +325,10 @@ function Metric({ value, label }: { value: number; label: string }) {
   );
 }
 
-function DataList({ title, items }: { title: string; items: ReactNode[] }) {
+function DataList({ title, icon, items }: { title: string; icon?: ReactNode; items: ReactNode[] }) {
   return (
     <div>
-      <h3 className="mb-3 text-sm font-semibold text-slate-200">{title}</h3>
+      <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-200">{icon}{title}</div>
       <div className="max-h-[420px] space-y-2 overflow-auto">
         {items.length > 0 ? items : (
           <div className="rounded-lg border border-white/10 p-4 text-xs text-slate-500">No data.</div>
