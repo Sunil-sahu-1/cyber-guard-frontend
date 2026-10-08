@@ -36,9 +36,9 @@ export default function AuditLogs() {
         }
       />
       <Panel className="overflow-hidden">
-        <div className="border-b border-white/10 p-4">
+        <div className="border-b border-[var(--border)] p-4">
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
             <Input
               value={q}
               onChange={(e) => setQ(e.target.value)}
@@ -51,7 +51,7 @@ export default function AuditLogs() {
         <div className="overflow-x-auto">
           {items.length ? (
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-600">
+              <thead className="border-b border-[var(--border)] text-xs uppercase tracking-wide text-[var(--muted)]">
                 <tr>
                   <th className="px-5 py-4">Action</th>
                   <th className="px-5 py-4">Description</th>
@@ -62,19 +62,19 @@ export default function AuditLogs() {
               </thead>
               <tbody>
                 {items.map((x) => (
-                  <tr key={x.id} className="border-b border-white/5">
-                    <td className="px-5 py-4 text-cyan-200">{x.action}</td>
-                    <td className="max-w-xl px-5 py-4 text-slate-400">{x.description}</td>
-                    <td className="px-5 py-4 text-slate-500">
+                  <tr key={x.id} className="border-b border-[var(--border)]">
+                    <td className="px-5 py-4 text-[var(--accent)]">{x.action}</td>
+                    <td className="max-w-xl px-5 py-4 text-[var(--muted)]">{x.description}</td>
+                    <td className="px-5 py-4 text-[var(--muted)]">
                       <div>{x.ip_address || "Unknown"}</div>
                       {publicIPv4 && (
-                        <div className="mt-1 text-xs text-cyan-300/80">
+                        <div className="mt-1 text-xs text-[var(--accent)]/80">
                           IPv4: {publicIPv4}
                         </div>
                       )}
                     </td>
-                    <td className="px-5 py-4 text-slate-400">{x.status}</td>
-                    <td className="px-5 py-4 text-slate-500">
+                    <td className="px-5 py-4 text-[var(--muted)]">{x.status}</td>
+                    <td className="px-5 py-4 text-[var(--muted)]">
                       {new Date(x.created_at).toLocaleString()}
                     </td>
                   </tr>
