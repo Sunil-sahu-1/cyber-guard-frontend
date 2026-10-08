@@ -28,7 +28,7 @@ type Signal = {
 };
 
 const inputClass =
-  "w-full rounded-xl border border-white/10 bg-white/[.04] px-3 py-2.5 text-sm text-slate-200 outline-none transition placeholder:text-slate-500 focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/30";
+  "w-full rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3 py-2.5 text-sm text-slate-200 outline-none transition placeholder:text-[var(--muted)] focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/30";
 
 const signalOptions = [
   ["Rule engine", "rule_engine"],
@@ -120,13 +120,13 @@ export default function IntelligencePage() {
       <PageTitle
         title="Security Intelligence"
         description="Investigate threats, combine security signals, use AI-assisted analysis, and review explainable intelligence."
-        action={<BrainCircuit className="h-5 w-5 text-cyan-300" />}
+        action={<BrainCircuit className="h-5 w-5 text-[var(--accent)]" />}
       />
 
       <div className="grid gap-5 xl:grid-cols-[1.25fr_.75fr]">
         <Panel className="p-5">
-          <SectionTitle icon={<Network className="h-4 w-4 text-cyan-300" />} title="Security graph search" />
-          <p className="mt-1 text-xs text-slate-500">
+          <SectionTitle icon={<Network className="h-4 w-4 text-[var(--accent)]" />} title="Security graph search" />
+          <p className="mt-1 text-xs text-[var(--muted)]">
             Find threats, incidents, users, IPs, and devices without entering query JSON.
           </p>
 
@@ -157,25 +157,25 @@ export default function IntelligencePage() {
         </Panel>
 
         <Panel className="p-5">
-          <SectionTitle icon={<ShieldCheck className="h-4 w-4 text-cyan-300" />} title="My human risk" />
+          <SectionTitle icon={<ShieldCheck className="h-4 w-4 text-[var(--accent)]" />} title="My human risk" />
           {risk ? (
             <>
               <div className="mt-4 flex items-end gap-3">
                 <div className="text-5xl font-bold text-slate-100">{formatNumber(risk.risk_score)}</div>
-                <span className="mb-1 rounded-full border border-white/10 bg-white/[.04] px-3 py-1 text-xs">
+                <span className="mb-1 rounded-full border border-[var(--border)] bg-[var(--panel-soft)] px-3 py-1 text-xs">
                   {formatLabel(String(risk.risk_level ?? "UNKNOWN"))}
                 </span>
               </div>
-              <div className="mt-2 text-sm text-slate-500">
+              <div className="mt-2 text-sm text-[var(--muted)]">
                 Review status: {formatLabel(String(risk.review_status ?? "Not reviewed"))}
               </div>
 
               {Array.isArray(risk.contributing_signals) && risk.contributing_signals.length > 0 && (
                 <div className="mt-4">
-                  <div className="text-xs font-medium uppercase tracking-wider text-slate-500">Contributing signals</div>
+                  <div className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">Contributing signals</div>
                   <div className="mt-2 space-y-2">
                     {risk.contributing_signals.slice(0, 5).map((item, i) => (
-                      <div key={i} className="rounded-lg border border-white/10 bg-white/[.02] p-3 text-sm">
+                      <div key={i} className="rounded-lg border border-[var(--border)] bg-[var(--panel-soft)] p-3 text-sm">
                         <DisplayValue value={item} />
                       </div>
                     ))}
@@ -194,8 +194,8 @@ export default function IntelligencePage() {
       </div>
 
       <Panel className="mt-5 p-5">
-        <SectionTitle icon={<GitBranch className="h-4 w-4 text-cyan-300" />} title="Hybrid security decision" />
-        <p className="mt-1 text-xs text-slate-500">
+        <SectionTitle icon={<GitBranch className="h-4 w-4 text-[var(--accent)]" />} title="Hybrid security decision" />
+        <p className="mt-1 text-xs text-[var(--muted)]">
           Select the evidence sources and assign their risk contribution. No JSON required.
         </p>
 
@@ -212,7 +212,7 @@ export default function IntelligencePage() {
           {signalOptions.map(([label, source]) => {
             const active = signals.some(item => item.source === source);
             return (
-              <label key={source} className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-3 text-sm transition ${active ? "border-cyan-400/40 bg-cyan-400/10 text-cyan-100" : "border-white/10 bg-white/[.02] text-slate-400"}`}>
+              <label key={source} className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-3 text-sm transition ${active ? "border-cyan-400/40 bg-cyan-400/10 text-cyan-100" : "border-[var(--border)] bg-[var(--panel-soft)] text-[var(--muted)]"}`}>
                 <input type="checkbox" checked={active} onChange={() => toggleSignal(source)} className="h-4 w-4 accent-cyan-400" />
                 {label}
               </label>
@@ -222,7 +222,7 @@ export default function IntelligencePage() {
 
         <div className="mt-4 space-y-3">
           {signals.map((signal, index) => (
-            <div key={signal.source} className="rounded-xl border border-white/10 bg-white/[.02] p-4">
+            <div key={signal.source} className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
               <div className="grid gap-3 md:grid-cols-[1fr_140px_1.5fr]">
                 <Field label="Signal source">
                   <Input value={formatLabel(signal.source)} disabled />
@@ -248,8 +248,8 @@ export default function IntelligencePage() {
       </Panel>
 
       <Panel className="mt-5 p-5">
-        <SectionTitle icon={<Workflow className="h-4 w-4 text-cyan-300" />} title="Unified security pipeline" />
-        <p className="mt-1 text-xs text-slate-500">
+        <SectionTitle icon={<Workflow className="h-4 w-4 text-[var(--accent)]" />} title="Unified security pipeline" />
+        <p className="mt-1 text-xs text-[var(--muted)]">
           Run the complete intelligence pipeline for a specific threat.
         </p>
         <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
@@ -263,13 +263,13 @@ export default function IntelligencePage() {
       </Panel>
 
       <Panel className="mt-5 p-5">
-        <SectionTitle icon={<Sparkles className="h-4 w-4 text-cyan-300" />} title="AI security analyst" />
-        <p className="mt-1 text-xs text-slate-500">
+        <SectionTitle icon={<Sparkles className="h-4 w-4 text-[var(--accent)]" />} title="AI security analyst" />
+        <p className="mt-1 text-xs text-[var(--muted)]">
           Ask a security question or generate evidence-grounded analysis.
         </p>
 
         <div className="mt-4">
-          <label className="mb-1.5 block text-xs font-medium text-slate-400">Your question</label>
+          <label className="mb-1.5 block text-xs font-medium text-[var(--muted)]">Your question</label>
           <textarea
             className={`${inputClass} min-h-28 resize-y`}
             placeholder="Example: What should I investigate first for this threat?"
@@ -304,7 +304,7 @@ export default function IntelligencePage() {
         </div>
 
         {!canInvestigate && (
-          <div className="mt-3 rounded-lg border border-white/10 bg-white/[.02] p-3 text-xs text-slate-500">
+          <div className="mt-3 rounded-lg border border-[var(--border)] bg-[var(--panel-soft)] p-3 text-xs text-[var(--muted)]">
             Enter a Threat ID or Incident ID to enable case-specific analysis.
           </div>
         )}
@@ -319,7 +319,7 @@ export default function IntelligencePage() {
       {result && (
         <Panel className="mt-5 p-5">
           <div className="flex items-center justify-between">
-            <SectionTitle icon={<ShieldCheck className="h-4 w-4 text-cyan-300" />} title="Latest intelligence" />
+            <SectionTitle icon={<ShieldCheck className="h-4 w-4 text-[var(--accent)]" />} title="Latest intelligence" />
             <Button variant="ghost" onClick={() => setResult(null)}>Clear</Button>
           </div>
           <ResponseCards data={result} />
@@ -331,12 +331,12 @@ export default function IntelligencePage() {
         {audit.length ? (
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             {audit.map((item, i) => (
-              <div key={String(item.id ?? i)} className="rounded-xl border border-white/10 bg-white/[.02] p-4">
+              <div key={String(item.id ?? i)} className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
                 <div className="flex items-center justify-between gap-3">
                   <span className="font-medium text-slate-200">
                     {formatLabel(String(item.decision ?? item.prompt_identifier ?? item.model ?? "Audit event"))}
                   </span>
-                  <span className="text-xs text-slate-500">{formatDate(item.created_at)}</span>
+                  <span className="text-xs text-[var(--muted)]">{formatDate(item.created_at)}</span>
                 </div>
                 <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
                   {item.risk_score !== undefined && <Metric label="Risk score" value={item.risk_score} />}
@@ -344,7 +344,7 @@ export default function IntelligencePage() {
                   {item.confidence !== undefined && <Metric label="Confidence" value={item.confidence} />}
                   {item.approval_status !== undefined && <Metric label="Approval" value={item.approval_status} />}
                 </div>
-                {item.reasoning && <p className="mt-3 text-xs leading-5 text-slate-400">{String(item.reasoning)}</p>}
+                {item.reasoning && <p className="mt-3 text-xs leading-5 text-[var(--muted)]">{String(item.reasoning)}</p>}
               </div>
             ))}
           </div>
@@ -361,7 +361,7 @@ function SectionTitle({ icon, title }: { icon: ReactNode; title: string }) {
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
-  return <label className="block"><span className="mb-1.5 block text-xs font-medium text-slate-400">{label}</span>{children}</label>;
+  return <label className="block"><span className="mb-1.5 block text-xs font-medium text-[var(--muted)]">{label}</span>{children}</label>;
 }
 
 function GraphResults({ data }: { data: JsonObject }) {
@@ -376,11 +376,11 @@ function GraphResults({ data }: { data: JsonObject }) {
         {isObject(summary) && <Metric label="Risk level" value={summary.risk_level ?? summary.overall_severity ?? "—"} />}
       </div>
       <div className="mt-4">
-        <div className="mb-2 text-xs font-medium uppercase tracking-wider text-slate-500">Graph matches</div>
+        <div className="mb-2 text-xs font-medium uppercase tracking-wider text-[var(--muted)]">Graph matches</div>
         {results.length ? (
           <div className="grid gap-2 md:grid-cols-2">
             {results.slice(0, 12).map((item, i) => (
-              <div key={i} className="rounded-xl border border-white/10 bg-white/[.02] p-3">
+              <div key={i} className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-3">
                 <DisplayValue value={item} />
               </div>
             ))}
@@ -398,8 +398,8 @@ function ResponseCards({ data }: { data: JsonObject }) {
   return (
     <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
       {entries.map(([key, value]) => (
-        <div key={key} className="rounded-xl border border-white/10 bg-white/[.02] p-4">
-          <div className="text-[11px] font-medium uppercase tracking-wider text-slate-500">{formatLabel(key)}</div>
+        <div key={key} className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
+          <div className="text-[11px] font-medium uppercase tracking-wider text-[var(--muted)]">{formatLabel(key)}</div>
           <div className="mt-2 text-sm text-slate-200"><DisplayValue value={value} /></div>
         </div>
       ))}
@@ -408,36 +408,36 @@ function ResponseCards({ data }: { data: JsonObject }) {
 }
 
 function DisplayValue({ value }: { value: unknown }): ReactNode {
-  if (value === null || value === undefined || value === "") return <span className="text-slate-500">—</span>;
+  if (value === null || value === undefined || value === "") return <span className="text-[var(--muted)]">—</span>;
   if (typeof value === "boolean") return value
     ? <span className="text-amber-300">Yes</span>
     : <span className="text-emerald-300">No</span>;
-  if (typeof value === "number") return <span className="font-semibold text-cyan-200">{formatNumber(value)}</span>;
+  if (typeof value === "number") return <span className="font-semibold text-[var(--accent)]">{formatNumber(value)}</span>;
   if (typeof value === "string") return <span className="break-words whitespace-pre-wrap">{value}</span>;
   if (Array.isArray(value)) {
-    if (!value.length) return <span className="text-slate-500">None</span>;
-    return <div className="space-y-2">{value.slice(0, 12).map((item, i) => <div key={i} className="rounded-lg border border-white/10 bg-black/10 p-2"><DisplayValue value={item} /></div>)}</div>;
+    if (!value.length) return <span className="text-[var(--muted)]">None</span>;
+    return <div className="space-y-2">{value.slice(0, 12).map((item, i) => <div key={i} className="rounded-lg border border-[var(--border)] bg-black/10 p-2"><DisplayValue value={item} /></div>)}</div>;
   }
   if (typeof value === "object") {
-    return <div className="space-y-2">{Object.entries(value as Record<string, unknown>).map(([key, item]) => <div key={key} className="flex items-start justify-between gap-3 border-b border-white/5 pb-2 last:border-0 last:pb-0"><span className="shrink-0 text-xs text-slate-500">{formatLabel(key)}</span><span className="text-right"><DisplayValue value={item} /></span></div>)}</div>;
+    return <div className="space-y-2">{Object.entries(value as Record<string, unknown>).map(([key, item]) => <div key={key} className="flex items-start justify-between gap-3 border-b border-[var(--border)] pb-2 last:border-0 last:pb-0"><span className="shrink-0 text-xs text-[var(--muted)]">{formatLabel(key)}</span><span className="text-right"><DisplayValue value={item} /></span></div>)}</div>;
   }
   return <span>{String(value)}</span>;
 }
 
 function Metric({ label, value }: { label: string; value: unknown }) {
-  return <div className="rounded-lg border border-white/10 bg-white/[.02] p-3"><div className="text-[10px] uppercase tracking-wider text-slate-500">{label}</div><div className="mt-1 text-sm font-semibold text-slate-200">{typeof value === "number" ? formatNumber(value) : formatLabel(String(value ?? "—"))}</div></div>;
+  return <div className="rounded-lg border border-[var(--border)] bg-[var(--panel-soft)] p-3"><div className="text-[10px] uppercase tracking-wider text-[var(--muted)]">{label}</div><div className="mt-1 text-sm font-semibold text-slate-200">{typeof value === "number" ? formatNumber(value) : formatLabel(String(value ?? "—"))}</div></div>;
 }
 
 function EmptyState({ icon, text }: { icon: ReactNode; text: string }) {
-  return <div className="flex items-center gap-2 rounded-xl border border-dashed border-white/10 p-4 text-sm text-slate-500">{icon}{text}</div>;
+  return <div className="flex items-center gap-2 rounded-xl border border-dashed border-[var(--border)] p-4 text-sm text-[var(--muted)]">{icon}{text}</div>;
 }
 
 function LoadingState() {
-  return <div className="mt-6 flex items-center gap-2 text-sm text-slate-500"><RefreshCw className="h-4 w-4 animate-spin" /> Loading risk profile…</div>;
+  return <div className="mt-6 flex items-center gap-2 text-sm text-[var(--muted)]"><RefreshCw className="h-4 w-4 animate-spin" /> Loading risk profile…</div>;
 }
 
 function HistoryIcon() {
-  return <RefreshCw className="h-4 w-4 text-cyan-300" />;
+  return <RefreshCw className="h-4 w-4 text-[var(--accent)]" />;
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
