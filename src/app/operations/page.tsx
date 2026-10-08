@@ -8,7 +8,7 @@ import { Button, Input, PageTitle, Panel, Select } from "@/components/ui";
 import * as api from "@/services/api/enterpriseApi";
 import type { JsonObject } from "@/services/api/enterpriseApi";
 
-const inputClass = "w-full rounded-xl border border-white/10 bg-white/[.04] px-3 py-2.5 text-sm text-slate-200 outline-none transition placeholder:text-slate-500 focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/30";
+const inputClass = "w-full rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3 py-2.5 text-sm text-slate-200 outline-none transition placeholder:text-[var(--muted)] focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/30";
 
 type PlaybookForm = { name:string; description:string; trigger_type:string; trigger_value:string; is_active:boolean };
 type StepForm = { step_order:number; name:string; action_type:string; parameter_value:string; requires_approval:boolean; timeout_seconds:number };
@@ -92,14 +92,14 @@ export default function OperationsPage(){
   }
 
   return <ProtectedShell>
-    <PageTitle title="Security Operations" description="SOAR playbooks, integrations, emergency meetings, governance, background tasks and versioned security policies." action={<Boxes className="h-5 w-5 text-cyan-300"/>}/>
+    <PageTitle title="Security Operations" description="SOAR playbooks, integrations, emergency meetings, governance, background tasks and versioned security policies." action={<Boxes className="h-5 w-5 text-[var(--accent)]"/>}/>
 
     {overview&&<div className="mb-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">{Object.entries((overview.metrics as JsonObject)||{}).map(([k,v])=><Metric key={k} label={formatLabel(k)} value={String(v)}/>)}</div>}
 
     <div className="grid gap-5 xl:grid-cols-2">
       <Panel className="p-5">
         <SectionTitle icon={<Play className="h-4 w-4"/>} title="SOAR Playbooks"/>
-        <p className="mt-1 text-xs text-slate-500">Create an automated response playbook and define its first action.</p>
+        <p className="mt-1 text-xs text-[var(--muted)]">Create an automated response playbook and define its first action.</p>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           <Field label="Playbook name"><Input value={playbook.name} placeholder="Incident Response" onChange={e=>setPlaybook({...playbook,name:e.target.value})}/></Field>
           <Field label="Trigger type"><Select value={playbook.trigger_type} onChange={e=>setPlaybook({...playbook,trigger_type:e.target.value})}><option>MANUAL</option><option>INCIDENT_SEVERITY</option><option>THREAT_TYPE</option><option>BEHAVIORAL_ANOMALY</option></Select></Field>
@@ -109,7 +109,7 @@ export default function OperationsPage(){
         <Toggle label="Playbook active" checked={playbook.is_active} onChange={v=>setPlaybook({...playbook,is_active:v})}/>
         <Button className="mt-3" disabled={!playbook.name.trim()} onClick={()=>void act(()=>api.createPlaybook(playbookPayload()))}><Plus className="h-4 w-4"/>Create playbook</Button>
 
-        <div className="mt-6 border-t border-white/10 pt-5">
+        <div className="mt-6 border-t border-[var(--border)] pt-5">
           <h3 className="text-sm font-semibold">Add playbook step</h3>
           <div className="mt-3 grid gap-3 md:grid-cols-2">
             <Field label="Playbook"><Select value={selectedPlaybook} onChange={e=>setSelectedPlaybook(e.target.value)}><option value="">Select playbook</option>{playbooks.map(p=><option key={String(p.id)} value={String(p.id)}>{String(p.name)} #{String(p.id)}</option>)}</Select></Field>
@@ -122,17 +122,17 @@ export default function OperationsPage(){
           <Toggle label="Require approval before execution" checked={step.requires_approval} onChange={v=>setStep({...step,requires_approval:v})}/>
           <div className="mt-3 flex gap-2"><Button disabled={!selectedPlaybook||!step.name.trim()} onClick={()=>void act(()=>api.addPlaybookStep(Number(selectedPlaybook),stepPayload()))}><Plus className="h-4 w-4"/>Add step</Button><Button variant="ghost" disabled={!selectedPlaybook} onClick={()=>void act(()=>api.launchPlaybook(Number(selectedPlaybook),{}))}><Play className="h-4 w-4"/>Run playbook</Button></div>
         </div>
-        <div className="mt-5 space-y-2">{playbooks.slice(0,8).map(p=><div key={String(p.id)} className="rounded-xl border border-white/10 p-3 text-sm"><div className="flex justify-between"><span>{String(p.name)}</span><span className="text-xs text-slate-500">{String(p.step_count??0)} steps · {Boolean(p.is_active)?"Active":"Inactive"}</span></div><div className="mt-1 text-xs text-slate-500">{String(p.description??"")}</div></div>)}</div>
+        <div className="mt-5 space-y-2">{playbooks.slice(0,8).map(p=><div key={String(p.id)} className="rounded-xl border border-[var(--border)] p-3 text-sm"><div className="flex justify-between"><span>{String(p.name)}</span><span className="text-xs text-[var(--muted)]">{String(p.step_count??0)} steps · {Boolean(p.is_active)?"Active":"Inactive"}</span></div><div className="mt-1 text-xs text-[var(--muted)]">{String(p.description??"")}</div></div>)}</div>
       </Panel>
 
       <Panel className="p-5">
         <SectionTitle icon={<Shield className="h-4 w-4"/>} title="Playbook runs & approvals"/>
-        <p className="mt-1 text-xs text-slate-500">Review runs and act only on steps that require approval.</p>
+        <p className="mt-1 text-xs text-[var(--muted)]">Review runs and act only on steps that require approval.</p>
         <div className="mt-4 space-y-3">{runs.slice(0,10).map(r=>{
           const status=String(r.status??"UNKNOWN");
           const waiting=status==="WAITING_APPROVAL";
-          return <div key={String(r.id)} className="rounded-xl border border-white/10 bg-white/[.02] p-4">
-            <div className="flex items-center justify-between gap-3"><div><div className="font-medium">#{String(r.id)} {String(r.playbook_name??"Run")}</div><div className="mt-1 text-xs text-slate-500">{formatDate(r.created_at)}</div></div><StatusBadge value={status}/></div>
+          return <div key={String(r.id)} className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
+            <div className="flex items-center justify-between gap-3"><div><div className="font-medium">#{String(r.id)} {String(r.playbook_name??"Run")}</div><div className="mt-1 text-xs text-[var(--muted)]">{formatDate(r.created_at)}</div></div><StatusBadge value={status}/></div>
             {r.error_message&&<div className="mt-2 text-xs text-red-300">{String(r.error_message)}</div>}
             <div className="mt-3 flex flex-wrap gap-2">
               {waiting&&<><Button variant="ghost" onClick={()=>void act(()=>api.approvePlaybookRun(Number(r.id)))}><CheckCircle2 className="h-4 w-4"/>Approve</Button><Button variant="ghost" onClick={()=>void act(()=>api.rejectPlaybookRun(Number(r.id),"Rejected from Security Operations"))}>Reject</Button></>}
@@ -145,7 +145,7 @@ export default function OperationsPage(){
 
       <Panel className="p-5">
         <SectionTitle icon={<Database className="h-4 w-4"/>} title="Integrations + OAuth"/>
-        <p className="mt-1 text-xs text-slate-500">Register a security integration and manage its connection state.</p>
+        <p className="mt-1 text-xs text-[var(--muted)]">Register a security integration and manage its connection state.</p>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           <Field label="Integration name"><Input value={integration.name} placeholder="SOC Webhook" onChange={e=>setIntegration({...integration,name:e.target.value})}/></Field>
           <Field label="Provider"><Select value={integration.provider} onChange={e=>setIntegration({...integration,provider:e.target.value})}>{["SLACK","TEAMS","JIRA","PAGERDUTY","GOOGLE_WORKSPACE","MICROSOFT_GRAPH","WEBHOOK","CUSTOM"].map(x=><option key={x}>{x}</option>)}</Select></Field>
@@ -156,12 +156,12 @@ export default function OperationsPage(){
         </div>
         <div className="mt-3 flex flex-wrap gap-2"><Button disabled={!integration.name.trim()} onClick={()=>void act(()=>api.createIntegration(integrationPayload()))}>Add integration</Button><Button variant="ghost" disabled={!selectedIntegration} onClick={()=>void act(()=>api.testIntegration(Number(selectedIntegration)))}>Test connection</Button><Button variant="ghost" disabled={!selectedIntegration} onClick={()=>void act(()=>api.syncIntegration(Number(selectedIntegration)))}>Sync</Button><Button variant="ghost" disabled={!selectedIntegration} onClick={()=>void act(()=>api.oauthDisconnect(Number(selectedIntegration)))}>Disconnect OAuth</Button></div>
         <Field label="Selected integration"><Select className="mt-3" value={selectedIntegration} onChange={e=>setSelectedIntegration(e.target.value)}><option value="">Select integration</option>{integrations.map(i=><option key={String(i.id)} value={String(i.id)}>{String(i.name)} · {String(i.provider)}</option>)}</Select></Field>
-        <div className="mt-4 grid gap-2 sm:grid-cols-2">{integrations.slice(0,8).map(i=><div key={String(i.id)} className="rounded-xl border border-white/10 p-3 text-xs"><div className="flex justify-between"><span className="font-medium">{String(i.name)}</span><StatusBadge value={String(i.health_status??"UNKNOWN")}/></div><div className="mt-1 text-slate-500">{String(i.provider)} · {formatLabel(String(i.category??""))} · {formatLabel(String(i.status??""))}</div></div>)}</div>
+        <div className="mt-4 grid gap-2 sm:grid-cols-2">{integrations.slice(0,8).map(i=><div key={String(i.id)} className="rounded-xl border border-[var(--border)] p-3 text-xs"><div className="flex justify-between"><span className="font-medium">{String(i.name)}</span><StatusBadge value={String(i.health_status??"UNKNOWN")}/></div><div className="mt-1 text-[var(--muted)]">{String(i.provider)} · {formatLabel(String(i.category??""))} · {formatLabel(String(i.status??""))}</div></div>)}</div>
       </Panel>
 
       <Panel className="p-5">
         <SectionTitle icon={<CalendarDays className="h-4 w-4"/>} title="Emergency meetings"/>
-        <p className="mt-1 text-xs text-slate-500">Schedule an incident bridge with optional integration and participants.</p>
+        <p className="mt-1 text-xs text-[var(--muted)]">Schedule an incident bridge with optional integration and participants.</p>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           <Field label="Meeting topic"><Input value={meeting.topic} placeholder="Security incident bridge" onChange={e=>setMeeting({...meeting,topic:e.target.value})}/></Field>
           <Field label="Status"><Select value={meeting.status} onChange={e=>setMeeting({...meeting,status:e.target.value})}><option>SCHEDULED</option><option>IN_PROGRESS</option><option>COMPLETED</option><option>CANCELLED</option></Select></Field>
@@ -173,7 +173,7 @@ export default function OperationsPage(){
           <Field label="Security briefing notes"><Input value={meeting.notes} placeholder="Key incident details for responders" onChange={e=>setMeeting({...meeting,notes:e.target.value})}/></Field>
         </div>
         <Button className="mt-3" disabled={!meeting.topic.trim()||!meeting.start_time} onClick={()=>void act(()=>api.createMeeting(meetingPayload()))}><CalendarDays className="h-4 w-4"/>Schedule meeting</Button>
-        <div className="mt-4 space-y-2">{meetings.slice(0,8).map(m=><div key={String(m.id)} className="rounded-xl border border-white/10 p-3"><div className="flex justify-between"><span className="font-medium">{String(m.topic)}</span><StatusBadge value={String(m.status??"SCHEDULED")}/></div><div className="mt-1 text-xs text-slate-500">{formatDate(m.start_time)}</div>{m.join_url&&<a className="mt-2 inline-block text-xs text-cyan-300" href={String(m.join_url)} target="_blank" rel="noreferrer">Open meeting</a>}</div>)}</div>
+        <div className="mt-4 space-y-2">{meetings.slice(0,8).map(m=><div key={String(m.id)} className="rounded-xl border border-[var(--border)] p-3"><div className="flex justify-between"><span className="font-medium">{String(m.topic)}</span><StatusBadge value={String(m.status??"SCHEDULED")}/></div><div className="mt-1 text-xs text-[var(--muted)]">{formatDate(m.start_time)}</div>{m.join_url&&<a className="mt-2 inline-block text-xs text-[var(--accent)]" href={String(m.join_url)} target="_blank" rel="noreferrer">Open meeting</a>}</div>)}</div>
       </Panel>
 
       <Panel className="p-5">
@@ -188,12 +188,12 @@ export default function OperationsPage(){
           <Field label="Consent version"><Input value={consentVersion} onChange={e=>setConsentVersion(e.target.value)} placeholder="1.0"/></Field>
         </div>
         <div className="mt-3 flex flex-wrap gap-2"><Button onClick={()=>void act(()=>api.enforceRetention(true))}>Enforce retention</Button><Button variant="ghost" onClick={()=>void act(()=>api.grantConsent({permission_scope:consentScope.trim(),consent_version:consentVersion.trim()||"1.0"}))}>Grant consent</Button><Button variant="ghost" onClick={()=>void act(()=>api.revokeConsent(consentScope.trim()))}>Revoke consent</Button></div>
-        <div className="mt-4 space-y-2">{consents.slice(0,8).map(c=><div key={String(c.id)} className="rounded-xl border border-white/10 p-3 text-xs"><div className="flex justify-between"><span>{formatLabel(String(c.permission_scope))}</span><StatusBadge value={Boolean(c.consent_given)?"GRANTED":"REVOKED"}/></div><div className="mt-1 text-slate-500">Version {String(c.consent_version??"—")} · {formatDate(c.granted_at)}</div></div>)}</div>
+        <div className="mt-4 space-y-2">{consents.slice(0,8).map(c=><div key={String(c.id)} className="rounded-xl border border-[var(--border)] p-3 text-xs"><div className="flex justify-between"><span>{formatLabel(String(c.permission_scope))}</span><StatusBadge value={Boolean(c.consent_given)?"GRANTED":"REVOKED"}/></div><div className="mt-1 text-[var(--muted)]">Version {String(c.consent_version??"—")} · {formatDate(c.granted_at)}</div></div>)}</div>
       </Panel>
 
       <Panel className="p-5">
         <SectionTitle icon={<RefreshCw className="h-4 w-4"/>} title="Background tasks"/>
-        <p className="mt-1 text-xs text-slate-500">Submit a supported background operation and monitor it by task ID.</p>
+        <p className="mt-1 text-xs text-[var(--muted)]">Submit a supported background operation and monitor it by task ID.</p>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           <Field label="Task"><Select value={task.task_name} onChange={e=>setTask({...task,task_name:e.target.value})}><option>RECALCULATE_HUMAN_RISK</option><option>SYNC_INTEGRATION</option><option>REFRESH_THREAT_INTELLIGENCE</option></Select></Field>
           <Field label="Task parameter (optional)"><Input value={task.payload_value} placeholder="Example: user_id=12" onChange={e=>setTask({...task,payload_value:e.target.value})}/></Field>
@@ -203,25 +203,25 @@ export default function OperationsPage(){
 
       <Panel className="p-5 xl:col-span-2">
         <SectionTitle icon={<FileCog className="h-4 w-4"/>} title="Versioned security policies"/>
-        <p className="mt-1 text-xs text-slate-500">Create a policy with a clear type, threshold and activation state.</p>
+        <p className="mt-1 text-xs text-[var(--muted)]">Create a policy with a clear type, threshold and activation state.</p>
         <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
           <Field label="Policy name"><Input value={policy.name} placeholder="Default Risk Threshold" onChange={e=>setPolicy({...policy,name:e.target.value})}/></Field>
           <Field label="Policy type"><Select value={policy.policy_type} onChange={e=>setPolicy({...policy,policy_type:e.target.value})}><option>RISK_THRESHOLD</option><option>PLAYBOOK_TRIGGER</option><option>RETENTION_RULE</option><option>AUTH_RULE</option><option>ACCESS_CONTROL</option></Select></Field>
           <Field label="Critical threshold"><Input type="number" min="0" max="100" value={policy.threshold} onChange={e=>setPolicy({...policy,threshold:Math.max(0,Math.min(100,Number(e.target.value)))})}/></Field>
-          <div><span className="mb-1.5 block text-xs font-medium text-slate-400">State</span><Toggle label="Policy active" checked={policy.is_active} onChange={v=>setPolicy({...policy,is_active:v})}/></div>
+          <div><span className="mb-1.5 block text-xs font-medium text-[var(--muted)]">State</span><Toggle label="Policy active" checked={policy.is_active} onChange={v=>setPolicy({...policy,is_active:v})}/></div>
         </div>
         <Button className="mt-3" disabled={!policy.name.trim()} onClick={()=>void act(()=>api.createPolicy(policyPayload()))}><Plus className="h-4 w-4"/>Create policy</Button>
-        <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">{policies.slice(0,12).map(p=><div key={String(p.id)} className="rounded-xl border border-white/10 p-4"><div className="flex justify-between gap-3"><span className="font-medium">{String(p.name)}</span><span className="text-xs text-slate-500">v{String(p.version)}</span></div><div className="mt-1 text-xs text-slate-500">{formatLabel(String(p.policy_type??""))} · {Boolean(p.is_active)?"Active":"Inactive"}</div><div className="mt-3 flex gap-2"><Button variant="ghost" onClick={()=>void act(()=>api.updatePolicy(Number(p.id),{is_active:!Boolean(p.is_active)}))}>{Boolean(p.is_active)?"Disable":"Enable"}</Button><Button variant="danger" onClick={()=>void act(()=>api.deletePolicy(Number(p.id)))}><Trash2 className="h-4 w-4"/>Delete</Button></div></div>)}</div>
+        <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">{policies.slice(0,12).map(p=><div key={String(p.id)} className="rounded-xl border border-[var(--border)] p-4"><div className="flex justify-between gap-3"><span className="font-medium">{String(p.name)}</span><span className="text-xs text-[var(--muted)]">v{String(p.version)}</span></div><div className="mt-1 text-xs text-[var(--muted)]">{formatLabel(String(p.policy_type??""))} · {Boolean(p.is_active)?"Active":"Inactive"}</div><div className="mt-3 flex gap-2"><Button variant="ghost" onClick={()=>void act(()=>api.updatePolicy(Number(p.id),{is_active:!Boolean(p.is_active)}))}>{Boolean(p.is_active)?"Disable":"Enable"}</Button><Button variant="danger" onClick={()=>void act(()=>api.deletePolicy(Number(p.id)))}><Trash2 className="h-4 w-4"/>Delete</Button></div></div>)}</div>
       </Panel>
     </div>
     {(message||error)&&<Panel className={"mt-5 p-4 text-sm " + (error?"text-red-300 border border-red-400/20":"text-emerald-300 border border-emerald-400/20")}>{error||message}</Panel>}
   </ProtectedShell>;
 }
 
-function SectionTitle({icon,title}:{icon:ReactNode;title:string}){return <div className="flex items-center gap-2"><span className="text-cyan-300">{icon}</span><h2 className="font-semibold">{title}</h2></div>}
-function Field({label,children}:{label:string;children:ReactNode}){return <label className="block"><span className="mb-1.5 block text-xs font-medium text-slate-400">{label}</span>{children}</label>}
-function Toggle({label,checked,onChange}:{label:string;checked:boolean;onChange:(v:boolean)=>void}){return <label className="mt-3 flex cursor-pointer items-center justify-between rounded-xl border border-white/10 bg-white/[.03] px-3 py-2.5"><span className="text-sm text-slate-300">{label}</span><input type="checkbox" checked={checked} onChange={e=>onChange(e.target.checked)} className="h-4 w-4 accent-cyan-400"/></label>}
-function Metric({label,value}:{label:string;value:string}){return <div className="rounded-xl border border-white/10 bg-white/[.02] p-3"><div className="text-lg font-bold">{value}</div><div className="mt-1 text-[10px] uppercase tracking-wider text-slate-500">{label}</div></div>}
-function StatusBadge({value}:{value:string}){const v=value.replaceAll("_"," ");return <span className="rounded-full border border-white/10 bg-white/[.04] px-2 py-1 text-[10px] uppercase tracking-wider text-slate-300">{v}</span>}
+function SectionTitle({icon,title}:{icon:ReactNode;title:string}){return <div className="flex items-center gap-2"><span className="text-[var(--accent)]">{icon}</span><h2 className="font-semibold">{title}</h2></div>}
+function Field({label,children}:{label:string;children:ReactNode}){return <label className="block"><span className="mb-1.5 block text-xs font-medium text-[var(--muted)]">{label}</span>{children}</label>}
+function Toggle({label,checked,onChange}:{label:string;checked:boolean;onChange:(v:boolean)=>void}){return <label className="mt-3 flex cursor-pointer items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] px-3 py-2.5"><span className="text-sm text-[var(--muted)]">{label}</span><input type="checkbox" checked={checked} onChange={e=>onChange(e.target.checked)} className="h-4 w-4 accent-cyan-400"/></label>}
+function Metric({label,value}:{label:string;value:string}){return <div className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-3"><div className="text-lg font-bold">{value}</div><div className="mt-1 text-[10px] uppercase tracking-wider text-[var(--muted)]">{label}</div></div>}
+function StatusBadge({value}:{value:string}){const v=value.replaceAll("_"," ");return <span className="rounded-full border border-[var(--border)] bg-[var(--panel-soft)] px-2 py-1 text-[10px] uppercase tracking-wider text-[var(--muted)]">{v}</span>}
 function formatLabel(value:string){return value.replace(/_/g," ").replace(/\b\w/g,letter=>letter.toUpperCase())}
 function formatDate(value:unknown){if(!value)return "—";const d=new Date(String(value));return Number.isNaN(d.getTime())?String(value):d.toLocaleString()}
