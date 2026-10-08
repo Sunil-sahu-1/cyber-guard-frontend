@@ -31,7 +31,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Sidebar />
         <div className="min-w-0 flex-1">
           <Header onMenu={() => setOpen(true)} />
-          <main className="space-bg min-h-[calc(100vh-4rem)] p-4 md:p-6 lg:p-7">
+          <main className="space-bg cg-page min-h-[calc(100vh-4.5rem)] p-4 md:p-6 lg:p-7">
             {children}
           </main>
         </div>
