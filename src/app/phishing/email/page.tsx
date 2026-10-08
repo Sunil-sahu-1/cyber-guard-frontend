@@ -95,7 +95,7 @@ export default function PhishingEmailPage() {
             </div>
             <div>
               <h2 className="font-semibold">Email analysis</h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[var(--muted)]">
                 Check sender, subject and complete message content.
               </p>
             </div>
@@ -110,7 +110,7 @@ export default function PhishingEmailPage() {
                 <div className="font-medium text-slate-200">
                   Analyze email from screenshot
                 </div>
-                <p className="mt-1 text-xs leading-5 text-slate-500">
+                <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
                   Upload a screenshot of the complete email. OCR will read the
                   full visible content, extract sender/subject/body, fill the
                   fields automatically and run the security classification.
@@ -133,7 +133,7 @@ export default function PhishingEmailPage() {
                 </label>
 
                 {screenshot && (
-                  <div className="mt-3 overflow-hidden rounded-xl border border-white/10 bg-black/20">
+                  <div className="mt-3 overflow-hidden rounded-xl border border-[var(--border)] bg-black/20">
                     <img
                       src={screenshot}
                       alt="Uploaded email screenshot"
@@ -146,7 +146,7 @@ export default function PhishingEmailPage() {
           </div>
 
           <div className="space-y-4">
-            <label className="block text-sm text-slate-400">
+            <label className="block text-sm text-[var(--muted)]">
               Sender
               <Input
                 value={sender}
@@ -156,7 +156,7 @@ export default function PhishingEmailPage() {
               />
             </label>
 
-            <label className="block text-sm text-slate-400">
+            <label className="block text-sm text-[var(--muted)]">
               Subject
               <Input
                 value={subject}
@@ -166,7 +166,7 @@ export default function PhishingEmailPage() {
               />
             </label>
 
-            <label className="block text-sm text-slate-400">
+            <label className="block text-sm text-[var(--muted)]">
               Email body
               <Textarea
                 value={body}
@@ -230,7 +230,7 @@ function Result({ result, ocrText }: { result: ScanResponse; ocrText: string }) 
     <Panel className="p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="text-xs uppercase tracking-[.18em] text-slate-600">
+          <div className="text-xs uppercase tracking-[.18em] text-[var(--muted)]">
             Security classification
           </div>
           <div className="mt-2 text-2xl font-semibold">
@@ -294,10 +294,10 @@ function Result({ result, ocrText }: { result: ScanResponse; ocrText: string }) 
       {result && (
         <Info title="OCR / extracted email text">
           <div className="rounded-xl bg-black/20 p-3">
-            <div className="mb-2 text-xs uppercase tracking-[.12em] text-slate-600">
+            <div className="mb-2 text-xs uppercase tracking-[.12em] text-[var(--muted)]">
               Screenshot OCR text
             </div>
-            <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-xs leading-5 text-slate-400">
+            <pre className="max-h-64 overflow-auto whitespace-pre-wrap text-xs leading-5 text-[var(--muted)]">
               {ocrText || "No OCR text returned."}
             </pre>
           </div>
@@ -305,13 +305,13 @@ function Result({ result, ocrText }: { result: ScanResponse; ocrText: string }) 
       )}
 
       <Info title="Explanation">
-        <p className="text-sm leading-6 text-slate-400">
+        <p className="text-sm leading-6 text-[var(--muted)]">
           {result.explanation}
         </p>
       </Info>
 
       <Info title="Email structure check">
-        <div className="grid gap-2 text-sm text-slate-400 sm:grid-cols-2">
+        <div className="grid gap-2 text-sm text-[var(--muted)] sm:grid-cols-2">
           <Check label="Sender format" value={Boolean(validation.sender_valid)} />
           <Check label="Subject present" value={Boolean(validation.subject_present)} />
           <Check label="Body present" value={Boolean(validation.body_present)} />
@@ -323,7 +323,7 @@ function Result({ result, ocrText }: { result: ScanResponse; ocrText: string }) 
       </Info>
 
       <Info title="URL / link analysis">
-        <div className="space-y-2 text-sm text-slate-400">
+        <div className="space-y-2 text-sm text-[var(--muted)]">
           <div>
             Links found: <span className="text-slate-200">{urls.length}</span>
           </div>
@@ -338,7 +338,7 @@ function Result({ result, ocrText }: { result: ScanResponse; ocrText: string }) 
               {urls.slice(0, 8).map((url, i) => (
                 <div
                   key={i}
-                  className="truncate rounded-lg bg-white/[.03] px-3 py-2 text-xs"
+                  className="truncate rounded-lg bg-[var(--panel-soft)] px-3 py-2 text-xs"
                 >
                   {url}
                 </div>
@@ -349,7 +349,7 @@ function Result({ result, ocrText }: { result: ScanResponse; ocrText: string }) 
       </Info>
 
       <Info title="AI model details">
-        <div className="grid gap-2 text-sm text-slate-400 sm:grid-cols-2">
+        <div className="grid gap-2 text-sm text-[var(--muted)] sm:grid-cols-2">
           <Metric label="ML phishing probability" value={mlProbability} />
           <Metric
             label="ML prediction"
@@ -385,7 +385,7 @@ function Result({ result, ocrText }: { result: ScanResponse; ocrText: string }) 
               </span>
             ))
           ) : (
-            <span className="text-sm text-slate-600">
+            <span className="text-sm text-[var(--muted)]">
               No indicators returned.
             </span>
           )}
@@ -397,7 +397,7 @@ function Result({ result, ocrText }: { result: ScanResponse; ocrText: string }) 
           {result.recommended_actions?.map((x, i) => (
             <div
               key={i}
-              className="rounded-xl bg-white/[.03] px-3 py-2 text-sm text-slate-400"
+              className="rounded-xl bg-[var(--panel-soft)] px-3 py-2 text-sm text-[var(--muted)]"
             >
               {x}
             </div>
@@ -427,20 +427,20 @@ function StatusCard({
   good: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[.025] p-4">
-      <div className="flex items-center gap-2 text-xs uppercase tracking-[.12em] text-slate-600">
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
+      <div className="flex items-center gap-2 text-xs uppercase tracking-[.12em] text-[var(--muted)]">
         <Icon className={good ? "h-4 w-4 text-emerald-300" : "h-4 w-4 text-amber-300"} />
         {label}
       </div>
       <div className="mt-2 text-sm font-semibold text-slate-200">{value}</div>
-      <div className="mt-1 text-xs text-slate-500">{detail}</div>
+      <div className="mt-1 text-xs text-[var(--muted)]">{detail}</div>
     </div>
   );
 }
 
 function Check({ label, value }: { label: string; value: boolean }) {
   return (
-    <div className="flex items-center gap-2 rounded-lg bg-white/[.03] px-3 py-2">
+    <div className="flex items-center gap-2 rounded-lg bg-[var(--panel-soft)] px-3 py-2">
       {value ? (
         <CheckCircle2 className="h-4 w-4 text-emerald-300" />
       ) : (
@@ -456,7 +456,7 @@ function TagGroup({ title, values }: { title: string; values: string[] }) {
 
   return (
     <div>
-      <div className="mb-2 text-xs text-slate-600">{title}</div>
+      <div className="mb-2 text-xs text-[var(--muted)]">{title}</div>
       <div className="flex flex-wrap gap-2">
         {values.slice(0, 20).map((value, i) => (
           <span
@@ -473,7 +473,7 @@ function TagGroup({ title, values }: { title: string; values: string[] }) {
 
 function Info({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="mt-5 rounded-xl border border-white/10 p-4">
+    <div className="mt-5 rounded-xl border border-[var(--border)] p-4">
       <div className="mb-2 text-sm font-medium">{title}</div>
       {children}
     </div>
@@ -482,8 +482,8 @@ function Info({ title, children }: { title: string; children: ReactNode }) {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[.025] p-4">
-      <div className="text-xs text-slate-600">{label}</div>
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--panel-soft)] p-4">
+      <div className="text-xs text-[var(--muted)]">{label}</div>
       <div className="mt-1 text-lg font-semibold">{value}</div>
     </div>
   );
@@ -495,7 +495,7 @@ function Empty({ text }: { text: string }) {
       <div className="text-center">
         <ScanSearch className="mx-auto h-12 w-12 text-violet-300/50" />
         <h2 className="mt-4 font-semibold">Awaiting an analysis</h2>
-        <p className="mt-1 text-sm text-slate-600">{text}</p>
+        <p className="mt-1 text-sm text-[var(--muted)]">{text}</p>
       </div>
     </Panel>
   );
